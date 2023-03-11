@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Net;
-using System.Net.NetworkInformation;
 using System.Net.Sockets;
 using System.Text;
 
@@ -8,40 +7,48 @@ namespace frontend
 {
     internal class SocketClientcs
     {
-        public static String request(string body, int port)
+        public static String Request(string body, int port)
         {
+            Console.WriteLine($"[SendData] => {body}");
+
             // ソケット生成
             using (Socket client = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp))
             {
                 // Connect関数でローカル(127.0.0.1)のポート番号9999で待機するソケットに接続する。
                 client.Connect(new IPEndPoint(IPAddress.Parse("127.0.0.1"), port));
                 // 送るメッセージをUTF8タイプのbyte配列で変換する。
-                var data = Encoding.UTF8.GetBytes(body);
+                var sendData = Encoding.UTF8.GetBytes(body);
 
                 // 転送するデータの長さをbigエンディアンで変換してサーバで送る。(4byte)
-                client.Send(BitConverter.GetBytes(data.Length));
+                client.Send(BitConverter.GetBytes(sendData.Length));
                 // データを転送する。
-                client.Send(data);
+                client.Send(sendData);
 
                 // データの長さを受信するための配列を生成する。(4byte)	
-                data = new byte[4];
+                var recvData = new byte[4];
+
                 // データの長さを受信する。
-                client.Receive(data, data.Length, SocketFlags.None);
+                client.Receive(recvData, recvData.Length, SocketFlags.None);
+
                 // serverでbigエンディアンを転送してもlittleエンディアンで受信される。bigエンディアンとlittleエンディアンは配列の順番が逆なのでreverseする。
-                Array.Reverse(data);
+                Array.Reverse(recvData);
+
                 // データ長さでbyte配列を生成する。
-                data = new byte[BitConverter.ToInt32(data, 0)];
+                recvData = new byte[BitConverter.ToInt32(recvData, 0)];
+
                 // データを受信する。
-                client.Receive(data, data.Length, SocketFlags.None);
+                client.Receive(recvData, recvData.Length, SocketFlags.None);
+
                 // 受信したデータをUTF8エンコードでstringタイプに変換してコンソールに出力する。
-                Console.WriteLine(Encoding.UTF8.GetString(data));
+                var returnData = Encoding.UTF8.GetString(recvData);
+                Console.WriteLine($"[ReturnData] => {returnData}");
+
+                return returnData;
             }
 
             // いずれかのキーを押下すると終了。
             //Console.WriteLine("Press any key...");
             //Console.ReadLine();
-
-            return "";
         }
     }
 }

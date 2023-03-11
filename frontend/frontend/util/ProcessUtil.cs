@@ -1,24 +1,11 @@
 ﻿using System;
 using System.Diagnostics;
-using System.IO;
-using System.Net;
-using System.Net.NetworkInformation;
 using System.Text;
 
-namespace frontend
+namespace frontend.util
 {
-    internal class PythonExecutor
+    internal class ProcessUtil
     {
-        private static int GetFreePort()
-        {
-            IPGlobalProperties ipGlobalProperties = IPGlobalProperties.GetIPGlobalProperties();
-            IPEndPoint[] tcpConnInfoArray = ipGlobalProperties.GetActiveTcpListeners();
-
-            int port = new Random().Next(1025, 65535);
-
-            return port;
-        }
-
         public String FileName { get; set; }
         public String WorkingDirectory { get; set; }
         public String Arguments { get; set; }
@@ -28,11 +15,11 @@ namespace frontend
 
         private StringBuilder standardOutputStringBuilder = new StringBuilder();
 
-        public PythonExecutor()
+        public ProcessUtil()
         {
         }
 
-        public void Execute()
+        public void Execute(bool daemon = false)
         {
             ProcessStartInfo psInfo = new ProcessStartInfo();
             psInfo.FileName = this.FileName;
@@ -55,19 +42,22 @@ namespace frontend
             p.Start();
 
             // 標準入力への書き込み
-            using (StreamWriter sw = p.StandardInput)
-            {
-                sw.Write(InputString);
-            }
+            //using (StreamWriter sw = p.StandardInput)
+            //{
+            //    sw.Write(InputString);
+            //}
 
             //非同期で出力とエラーの読み取りを開始
             p.BeginOutputReadLine();
             p.BeginErrorReadLine();
 
-            // 終わるまでまつ
-            p.WaitForExit();
-            this.ExitCode = p.ExitCode;
-            this.StandardOutput = standardOutputStringBuilder.ToString();
+            if (daemon)
+            {
+                // 終わるまでまつ
+                p.WaitForExit();
+                this.ExitCode = p.ExitCode;
+                this.StandardOutput = standardOutputStringBuilder.ToString();
+            }
         }
 
         /// <summary>
@@ -90,7 +80,7 @@ namespace frontend
         void p_ErrorDataReceived(object sender,
             System.Diagnostics.DataReceivedEventArgs e)
         {
-             Console.WriteLine(e.ToString());
+            Console.WriteLine(e.ToString());
         }
     }
 }

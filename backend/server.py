@@ -1,6 +1,11 @@
+import sys
+import functools
 # ソケットを使うためにsocketモジュールをimportする。
 import socket, threading
- 
+
+# https://qiita.com/HidKamiya/items/9e941a5389ba5eb79df1
+print = functools.partial(print, flush=True)
+
 # binder関数はサーバーからacceptしたら生成されるsocketインスタンスを通ってclientからデータを受信するとecho形で再送信するメソッドだ。
 def binder(client_socket, addr):
   # コネクションになれば接続アドレスを出力する。
@@ -20,7 +25,7 @@ def binder(client_socket, addr):
       msg = data.decode()
       # 受信されたメッセージをコンソールに出力する。
       print('Received from', addr, msg)
- 
+
       # 受信されたメッセージの前に「echo:」という文字を付ける。
       msg = "echo : " + msg
       # バイナリ(byte)タイプに変換する。
@@ -38,27 +43,37 @@ def binder(client_socket, addr):
     # 接続が切れたらsocketリソースを返却する。
     client_socket.close()
 
-print("test")
+print("--- Start ---")
+
+port = int(sys.argv[1])
+print(f"port = {port}")
+
 # ソケットを生成する。
 server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+
 # ソケットレベルとデータタイプを設定する。
 server_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+
 # サーバーは複数ipを使っているPCの場合はIPを設定して、そうではない場合はNoneや''で設定する。
 # ポートはPC内で空いているポートを使う。cmdにnetstat -an | find "LISTEN"で確認できる。
-server_socket.bind(('', 9999))
+server_socket.bind(('', port))
+
 # server設定が完了すればlistenを開始する。
 server_socket.listen()
- 
+
 try:
   # サーバーは複数クライアントから接続するので無限ループを使う。
   while True:
     # clientから接続すればacceptが発生する。
     # clientソケットとaddr(アドレス)をタプルで受け取る。
     client_socket, addr = server_socket.accept()
+
     # スレッドを利用してclient接続を作って、またaccept関数に行ってclientを待機する。
     th = threading.Thread(target=binder, args = (client_socket,addr))
+
     # スレッド開始
     th.start()
+
 except:
   # コンソール出力
   print("server")

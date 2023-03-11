@@ -1,7 +1,6 @@
-﻿using System;
-using System.IO;
-using System.IO.MemoryMappedFiles;
-using System.Text;
+﻿using frontend.backend;
+using System;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace frontend
@@ -9,37 +8,32 @@ namespace frontend
 
     public partial class Form1 : Form
     {
-        //const string MMAP_NAME = "MAP_TEST";
-        //MemoryMappedViewAccessor accessor;
-
         public Form1()
         {
             InitializeComponent();
-
-            //MemoryMappedFile share_mem = MemoryMappedFile.CreateFromFile(@"./_memory.dat", FileMode.Open, MMAP_NAME);
-            //accessor = share_mem.CreateViewAccessor();
         }
 
         private void Form1_Load(object sender, EventArgs e)
         {
             textBox1.AutoSize = false;
-            textBox1.Size = new System.Drawing.Size(200, 34);
+            textBox1.Size = new System.Drawing.Size(251, 28);
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        async private void button1_Click(object sender, EventArgs e)
         {
-            // Write data to shared memory
-            //string str = "ああHelloworld3049999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999ppppppppppppppppppppppppppppppppppppppppppppp@";
-            //Encoding utf8 = Encoding.GetEncoding("UTF-8");
-            //byte[] data = utf8.GetBytes(str);
-            //Console.WriteLine(data.Length);
-            //accessor.WriteArray(0, data, 0, data.Length);
+            var ret = await RequestBackend(textBox1.Text);
+            MessageBox.Show(ret);
+        }
 
-            var python = new PythonExecutor();
-            python.FileName = "python";
-            //python.Arguments = "server.py";
-            python.WorkingDirectory = @"C:\Users\tamu0\R\WORK\csharp-python\backend";
-            python.Execute();
+        private async Task<string> RequestBackend(string data)
+        {
+            return await Task.Run(() =>
+            {
+                var backendServer = new BackendServer();
+                backendServer.Start();
+                var ret = backendServer.Request(textBox1.Text);
+                return ret;
+            });
         }
 
         /// ApplicationExitイベントハンドラ
