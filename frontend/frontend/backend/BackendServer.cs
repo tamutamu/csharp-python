@@ -1,4 +1,5 @@
-﻿using frontend.util;
+﻿using frontend.command;
+using frontend.util;
 
 namespace frontend.backend
 {
@@ -38,7 +39,7 @@ namespace frontend.backend
             return processUtil.Exit();
         }
 
-        public string Request(string data)
+        public string Request(IBackendCmd cmd)
         {
             var ret = SocketClientcs.Request(data, this.Port);
             return ret;

@@ -18,8 +18,8 @@ namespace frontend
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            textBox1.AutoSize = false;
-            textBox1.Size = new System.Drawing.Size(251, 28);
+            //textBox1.AutoSize = false;
+            //textBox1.Size = new System.Drawing.Size(251, 28);
         }
 
         async private void button1_Click(object sender, EventArgs e)
@@ -33,8 +33,20 @@ namespace frontend
             return await Task.Run(() =>
             {
                 var backendServer = new BackendServer();
+
+                this.Invoke((Action)(() =>
+                {
+                    btnExit.Enabled = false;
+                }));
+
                 backendServer.Start();
                 var ret = backendServer.Request(textBox1.Text);
+
+                this.Invoke((Action)(() =>
+                {
+                    btnExit.Enabled = true;
+                }));
+
                 return ret;
             });
         }
