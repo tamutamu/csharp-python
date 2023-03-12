@@ -5,9 +5,12 @@ using System.Windows.Forms;
 
 namespace frontend
 {
-
     public partial class Form1 : Form
     {
+        static NLog.Logger LOGGER = NLog.LogManager.GetCurrentClassLogger();
+
+        private BackendServer backendServer;
+
         public Form1()
         {
             InitializeComponent();
@@ -48,6 +51,19 @@ namespace frontend
             //}
 
             Application.ApplicationExit -= new EventHandler(Application_ApplicationExit);
+        }
+
+        private void contextMenuStrip1_Opening(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+
+        }
+
+        private void btnExit_Click(object sender, EventArgs e)
+        {
+            if (backendServer != null)
+            {
+                backendServer.Stop();
+            }
         }
     }
 }

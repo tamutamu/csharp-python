@@ -12,11 +12,19 @@ namespace frontend.util
         public String InputString { get; set; }
         public String StandardOutput { get; set; }
         public int ExitCode { get; set; }
+        private Process process { get; set; }
 
         private StringBuilder standardOutputStringBuilder = new StringBuilder();
 
         public ProcessUtil()
         {
+        }
+        public int Exit()
+        {
+            this.process.Kill();
+            process.WaitForExit();
+            this.ExitCode = process.ExitCode;
+            return this.ExitCode;
         }
 
         public void Execute(bool daemon = false)
@@ -33,13 +41,13 @@ namespace frontend.util
             psInfo.RedirectStandardError = true;
 
             // Process p = Process.Start(psInfo);
-            Process p = new System.Diagnostics.Process();
-            p.StartInfo = psInfo;
-            p.OutputDataReceived += p_OutputDataReceived;
-            p.ErrorDataReceived += p_ErrorDataReceived;
+            process = new System.Diagnostics.Process();
+            process.StartInfo = psInfo;
+            process.OutputDataReceived += p_OutputDataReceived;
+            process.ErrorDataReceived += p_ErrorDataReceived;
 
             // プロセスの実行
-            p.Start();
+            process.Start();
 
             // 標準入力への書き込み
             //using (StreamWriter sw = p.StandardInput)
@@ -48,14 +56,14 @@ namespace frontend.util
             //}
 
             //非同期で出力とエラーの読み取りを開始
-            p.BeginOutputReadLine();
-            p.BeginErrorReadLine();
+            process.BeginOutputReadLine();
+            process.BeginErrorReadLine();
 
             if (daemon)
             {
                 // 終わるまでまつ
-                p.WaitForExit();
-                this.ExitCode = p.ExitCode;
+                process.WaitForExit();
+                this.ExitCode = process.ExitCode;
                 this.StandardOutput = standardOutputStringBuilder.ToString();
             }
         }
