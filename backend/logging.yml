@@ -1,0 +1,21 @@
+version: 1
+ 
+formatters:
+  default:
+    format: '{asctime} {name:<8s} {levelname:<8s} {message}'
+    style: '{'
+ 
+handlers:
+  log-rotate:
+    class: logging.handlers.TimedRotatingFileHandler
+    filename: 'logs/server.log'
+    when: 'midnight'
+    interval: 1
+    backupCount: 7
+    encoding: utf-8
+    formatter: default
+ 
+root:
+  level: INFO
+  handlers:
+    - log-rotate

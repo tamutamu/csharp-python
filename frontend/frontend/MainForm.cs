@@ -6,13 +6,13 @@ using System.Windows.Forms;
 
 namespace frontend
 {
-    public partial class Form1 : Form
+    public partial class MainForm : Form
     {
         static NLog.Logger LOGGER = NLog.LogManager.GetCurrentClassLogger();
 
         private BackendServer backendServer = null;
 
-        public Form1()
+        public MainForm()
         {
             InitializeComponent();
         }
@@ -26,7 +26,6 @@ namespace frontend
         async private void button1_Click(object sender, EventArgs e)
         {
             var ret = await RequestBackend(textBox1.Text);
-            MessageBox.Show(ret);
         }
 
         private async Task<string> RequestBackend(string data)
@@ -34,6 +33,9 @@ namespace frontend
             return await Task.Run(() =>
             {
                 backendServer = new BackendServer();
+                backendServer.OupputDataReceivedEventHandler = BackendServerOutputDataReceived;
+                backendServer.ErrorDataReceivedEventHandler = BackendServerErrorDataReceived;
+                backendServer.ExitEventHandler = BackendServerExited;
 
                 this.Invoke((Action)(() =>
                 {
@@ -54,17 +56,37 @@ namespace frontend
             });
         }
 
-        /// ApplicationExitイベントハンドラ
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
+        void BackendServerOutputDataReceived(object sender,
+            System.Diagnostics.DataReceivedEventArgs e)
+        {
+            if (e != null && e.Data != null && e.Data.Length > 0)
+            {
+                this.Invoke((Action)(() =>
+                {
+                    rtbMessage.AppendText(e.Data + "\n");
+                }));
+            }
+        }
+
+        void BackendServerErrorDataReceived(object sender,
+            System.Diagnostics.DataReceivedEventArgs e)
+        {
+            if (e != null && e.Data != null && e.Data.Length > 0)
+            {
+                this.Invoke((Action)(() =>
+                {
+                    rtbMessage.AppendText(e.Data + "\n");
+                }));
+            }
+        }
+
+        private void BackendServerExited(object sender, EventArgs e)
+        {
+            Console.WriteLine("BackendServer ended...");
+        }
+
         private void Application_ApplicationExit(object sender, EventArgs e)
         {
-            //if (accessor != null)
-            //{
-            //    accessor.Dispose();
-            //}
-
             Application.ApplicationExit -= new EventHandler(Application_ApplicationExit);
         }
 

@@ -11,6 +11,11 @@ namespace frontend.util
         public String Arguments { get; set; }
         public String InputString { get; set; }
         public String StandardOutput { get; set; }
+
+        public DataReceivedEventHandler OupputDataReceivedEventHandler { get; set; }
+        public DataReceivedEventHandler ErrorDataReceivedEventHandler { get; set; }
+        public EventHandler ExitEventHandler { get; set; }
+
         public int ExitCode { get; set; }
         private Process process { get; set; }
 
@@ -49,9 +54,10 @@ namespace frontend.util
             process = new System.Diagnostics.Process();
             process.StartInfo = psInfo;
             process.EnableRaisingEvents = true;
-            process.OutputDataReceived += p_OutputDataReceived;
-            process.ErrorDataReceived += p_ErrorDataReceived;
-            process.Exited += new EventHandler(p_Exited);
+
+            process.OutputDataReceived += OupputDataReceivedEventHandler;
+            process.ErrorDataReceived += ErrorDataReceivedEventHandler;
+            process.Exited += new EventHandler(ExitEventHandler);
 
             // プロセスの実行
             process.Start();
@@ -73,34 +79,6 @@ namespace frontend.util
                 this.ExitCode = process.ExitCode;
                 this.StandardOutput = standardOutputStringBuilder.ToString();
             }
-        }
-
-        /// <summary>
-        /// 標準出力データを受け取った時の処理
-        /// </summary>
-        void p_OutputDataReceived(object sender,
-            System.Diagnostics.DataReceivedEventArgs e)
-        {
-            //processMessage(sender, e);
-            if (e != null && e.Data != null && e.Data.Length > 0)
-            {
-                standardOutputStringBuilder.Append(e.Data + "\n");
-                Console.WriteLine(standardOutputStringBuilder.ToString());
-            }
-        }
-
-        /// <summary>
-        /// 標準エラーを受け取った時の処理
-        /// </summary>
-        void p_ErrorDataReceived(object sender,
-            System.Diagnostics.DataReceivedEventArgs e)
-        {
-            Console.WriteLine(e.ToString());
-        }
-
-        private void p_Exited(object sender, EventArgs e)
-        {
-            //MessageBox.Show("終了しました。");
         }
     }
 }

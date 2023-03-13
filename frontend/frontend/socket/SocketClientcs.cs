@@ -14,8 +14,15 @@ namespace frontend
             // ソケット生成
             using (Socket client = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp))
             {
-                // Connect関数でローカル(127.0.0.1)のポート番号9999で待機するソケットに接続する。
-                client.Connect(new IPEndPoint(IPAddress.Parse("127.0.0.1"), port));
+                //client.Connect(new IPEndPoint(IPAddress.Parse("127.0.0.1"), port));
+                var clientDone = client.BeginConnect(new IPEndPoint(IPAddress.Parse("127.0.0.1"), port), null, null);
+                var ret = clientDone.AsyncWaitHandle.WaitOne(10000, true);
+                if (!ret)
+                {
+                    //タイムアウトの例外
+                    throw new SocketException(10060);
+                }
+
                 // 送るメッセージをUTF8タイプのbyte配列で変換する。
                 var sendData = Encoding.UTF8.GetBytes(body);
 
