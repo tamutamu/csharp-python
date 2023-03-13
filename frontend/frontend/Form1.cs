@@ -1,4 +1,5 @@
 ﻿using frontend.backend;
+using frontend.command;
 using System;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -9,7 +10,7 @@ namespace frontend
     {
         static NLog.Logger LOGGER = NLog.LogManager.GetCurrentClassLogger();
 
-        private BackendServer backendServer;
+        private BackendServer backendServer = null;
 
         public Form1()
         {
@@ -32,7 +33,7 @@ namespace frontend
         {
             return await Task.Run(() =>
             {
-                var backendServer = new BackendServer();
+                backendServer = new BackendServer();
 
                 this.Invoke((Action)(() =>
                 {
@@ -40,7 +41,9 @@ namespace frontend
                 }));
 
                 backendServer.Start();
-                var ret = backendServer.Request(textBox1.Text);
+
+                var StartCommand = new Start(textBox1.Text);
+                var ret = backendServer.Request(StartCommand);
 
                 this.Invoke((Action)(() =>
                 {
@@ -72,10 +75,7 @@ namespace frontend
 
         private void btnExit_Click(object sender, EventArgs e)
         {
-            if (backendServer != null)
-            {
-                backendServer.Stop();
-            }
+            backendServer?.Stop();
         }
     }
 }

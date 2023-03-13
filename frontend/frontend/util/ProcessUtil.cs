@@ -21,6 +21,7 @@ namespace frontend.util
         }
         public int Exit()
         {
+            this.process.CloseMainWindow();
             this.process.Kill();
             process.WaitForExit();
             this.ExitCode = process.ExitCode;
@@ -34,7 +35,11 @@ namespace frontend.util
             psInfo.WorkingDirectory = this.WorkingDirectory;
             psInfo.Arguments = this.Arguments;
 
+#if DEBUG
+            psInfo.CreateNoWindow = false;
+#else 
             psInfo.CreateNoWindow = true;
+#endif
             psInfo.UseShellExecute = false;
             psInfo.RedirectStandardInput = true;
             psInfo.RedirectStandardOutput = true;
@@ -43,8 +48,10 @@ namespace frontend.util
             // Process p = Process.Start(psInfo);
             process = new System.Diagnostics.Process();
             process.StartInfo = psInfo;
+            process.EnableRaisingEvents = true;
             process.OutputDataReceived += p_OutputDataReceived;
             process.ErrorDataReceived += p_ErrorDataReceived;
+            process.Exited += new EventHandler(p_Exited);
 
             // プロセスの実行
             process.Start();
@@ -89,6 +96,11 @@ namespace frontend.util
             System.Diagnostics.DataReceivedEventArgs e)
         {
             Console.WriteLine(e.ToString());
+        }
+
+        private void p_Exited(object sender, EventArgs e)
+        {
+            //MessageBox.Show("終了しました。");
         }
     }
 }
