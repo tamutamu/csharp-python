@@ -15,6 +15,9 @@ namespace frontend
         public MainForm()
         {
             InitializeComponent();
+
+            //ApplicationExitイベントハンドラを追加
+            Application.ApplicationExit += new EventHandler(Application_ApplicationExit);
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -87,6 +90,7 @@ namespace frontend
 
         private void Application_ApplicationExit(object sender, EventArgs e)
         {
+            backendServer?.Stop();
             Application.ApplicationExit -= new EventHandler(Application_ApplicationExit);
         }
 

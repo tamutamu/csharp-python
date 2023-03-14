@@ -1,0 +1,7 @@
+{
+    "recommendations": [
+        "ms-python.isort",
+        "donjayamanne.python-extension-pack",
+        "atishay-jain.all-autocomplete"
+    ]
+}

@@ -6,7 +6,11 @@ formatters:
     style: '{'
  
 handlers:
-  log-rotate:
+  console_handler:
+    class: logging.StreamHandler
+    formatter: default
+
+  file_handler:
     class: logging.handlers.TimedRotatingFileHandler
     filename: 'logs/server.log'
     when: 'midnight'
@@ -18,4 +22,7 @@ handlers:
 root:
   level: INFO
   handlers:
-    - log-rotate
+    - console_handler
+    - file_handler
+
+disable_existing_loggers: False

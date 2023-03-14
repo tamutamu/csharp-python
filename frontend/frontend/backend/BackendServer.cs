@@ -46,7 +46,16 @@ namespace frontend.backend
 
         public int Stop()
         {
-            return processUtil.Exit();
+            try
+            {
+                return processUtil.Exit();
+            }
+            catch (Exception e)
+            {
+                LOGGER.Debug("process has been deleted.");
+            }
+
+            return 1;
         }
 
         public string Request(IBackendCmd cmd)

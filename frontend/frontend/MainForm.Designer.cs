@@ -41,10 +41,9 @@
             // 
             // btnTest1
             // 
-            this.btnTest1.Location = new System.Drawing.Point(429, 91);
-            this.btnTest1.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.btnTest1.Location = new System.Drawing.Point(581, 78);
             this.btnTest1.Name = "btnTest1";
-            this.btnTest1.Size = new System.Drawing.Size(135, 44);
+            this.btnTest1.Size = new System.Drawing.Size(123, 38);
             this.btnTest1.TabIndex = 0;
             this.btnTest1.Text = "テスト";
             this.btnTest1.UseVisualStyleBackColor = true;
@@ -53,10 +52,9 @@
             // textBox1
             // 
             this.textBox1.Font = new System.Drawing.Font("MS UI Gothic", 15.85714F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.textBox1.Location = new System.Drawing.Point(62, 91);
-            this.textBox1.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.textBox1.Location = new System.Drawing.Point(56, 78);
             this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(321, 44);
+            this.textBox1.Size = new System.Drawing.Size(465, 39);
             this.textBox1.TabIndex = 1;
             // 
             // rtbMessage
@@ -66,10 +64,9 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.rtbMessage.BackColor = System.Drawing.SystemColors.ControlLight;
             this.rtbMessage.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.rtbMessage.Location = new System.Drawing.Point(62, 186);
-            this.rtbMessage.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.rtbMessage.Location = new System.Drawing.Point(56, 159);
             this.rtbMessage.Name = "rtbMessage";
-            this.rtbMessage.Size = new System.Drawing.Size(666, 257);
+            this.rtbMessage.Size = new System.Drawing.Size(797, 618);
             this.rtbMessage.TabIndex = 3;
             this.rtbMessage.Text = "";
             // 
@@ -81,15 +78,15 @@
             this.toolStripMenuItem1});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Padding = new System.Windows.Forms.Padding(7, 2, 0, 2);
-            this.menuStrip1.Size = new System.Drawing.Size(800, 42);
+            this.menuStrip1.Padding = new System.Windows.Forms.Padding(6, 2, 0, 2);
+            this.menuStrip1.Size = new System.Drawing.Size(918, 33);
             this.menuStrip1.TabIndex = 4;
             this.menuStrip1.Text = "menuStrip1";
             // 
             // toolStripMenuItem1
             // 
             this.toolStripMenuItem1.Name = "toolStripMenuItem1";
-            this.toolStripMenuItem1.Size = new System.Drawing.Size(112, 38);
+            this.toolStripMenuItem1.Size = new System.Drawing.Size(98, 29);
             this.toolStripMenuItem1.Text = "ファイル(F)";
             // 
             // contextMenuStrip1
@@ -101,10 +98,9 @@
             // 
             // btnExit
             // 
-            this.btnExit.Location = new System.Drawing.Point(593, 91);
-            this.btnExit.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.btnExit.Location = new System.Drawing.Point(730, 78);
             this.btnExit.Name = "btnExit";
-            this.btnExit.Size = new System.Drawing.Size(135, 46);
+            this.btnExit.Size = new System.Drawing.Size(123, 39);
             this.btnExit.TabIndex = 6;
             this.btnExit.Text = "停  止";
             this.btnExit.UseVisualStyleBackColor = true;
@@ -112,16 +108,15 @@
             // 
             // MainForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(11F, 21F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(10F, 18F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 483);
+            this.ClientSize = new System.Drawing.Size(918, 811);
             this.Controls.Add(this.btnExit);
             this.Controls.Add(this.rtbMessage);
             this.Controls.Add(this.textBox1);
             this.Controls.Add(this.btnTest1);
             this.Controls.Add(this.menuStrip1);
             this.MainMenuStrip = this.menuStrip1;
-            this.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.Name = "MainForm";
             this.Text = "Form1";
             this.Load += new System.EventHandler(this.Form1_Load);
