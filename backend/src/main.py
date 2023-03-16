@@ -1,15 +1,32 @@
 import functools
+import sys
 from logging import getLogger
 
+from command.executer import CommandHandler
+from db import setup_master_table
 from log.config import init_logging
 from server.server import Server
-
-# Logging初期化
-init_logging()
-LOGGER = getLogger()
 
 # https://qiita.com/HidKamiya/items/9e941a5389ba5eb79df1
 print = functools.partial(print, flush=True)
 
+
+def init():
+    # Logging初期化
+    init_logging()
+
+    # マスターテーブルセットアップ
+    setup_master_table()
+
+
 if __name__ == "__main__":
+    init()
+
+    LOGGER = getLogger()
+    LOGGER.info("[Server] Start")
+
     server = Server()
+    port = int(sys.argv[1])
+    server.start(port, CommandHandler())
+
+    LOGGER.info("[Server] End")

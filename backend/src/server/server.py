@@ -1,6 +1,8 @@
 import socket
-import threading
 from logging import getLogger
+
+from command.creator import CommandCreator
+from command.executer import CommandHandler
 
 LOGGER = getLogger()
 
@@ -9,7 +11,7 @@ class Server:
     def __init__(self) -> None:
         pass
 
-    def start(self, port):
+    def start(self, port, request_handler: CommandHandler):
         LOGGER.info(f"--- Start(port = {port}) ---")
 
         # ソケットを生成する。
@@ -23,7 +25,7 @@ class Server:
         server_socket.bind(("", port))
 
         # Ctrl + cを受け取ることができるように
-        server_socket.settimeout(20)
+        server_socket.settimeout(2)
 
         # server設定が完了すればlistenを開始する。
         server_socket.listen()
@@ -35,13 +37,8 @@ class Server:
                     # clientから接続すればacceptが発生する。
                     # clientソケットとaddr(アドレス)をタプルで受け取る。
                     client_socket, addr = server_socket.accept()
+                    self.binder(client_socket, addr, request_handler)
 
-                    # スレッドを利用してclient接続を作って、またaccept関数に行ってclientを待機する。
-                    th = threading.Thread(target=self.binder, args=(client_socket, addr))
-                    th.daemon = True
-
-                    # スレッド開始
-                    th.start()
                 except socket.timeout:
                     pass
 
@@ -51,7 +48,7 @@ class Server:
             # エラーが発生すればサーバーソケットを閉める。
             server_socket.close()
 
-    def binder(self, client_socket, addr):
+    def binder(self, client_socket, addr, request_handler: CommandHandler):
         """_summary_
         binder関数はサーバーからacceptしたら生成されるsocketインスタンスを通ってclientから
         データを受信するとecho形で再送信するメソッドだ。
@@ -75,12 +72,13 @@ class Server:
                 # 受信されたデータをstr形式でdecodeする。
                 msg = data.decode()
                 # 受信されたメッセージをコンソールに出力する。
-                LOGGER.info(f"Received from {addr} {msg}")
+                # LOGGER.info(f"Received from {addr} {msg}")
+                ret = request_handler.handle(CommandCreator.create(msg))
 
                 # 受信されたメッセージの前に「echo:」という文字を付ける。
-                msg = "echo : " + msg
+                # msg = "echo : " + msg
                 # バイナリ(byte)タイプに変換する。
-                data = msg.encode()
+                data = ret.encode()
                 # バイナリのデータサイズを計算する。
                 length = len(data)
                 # データサイズをlittleエンディアンタイプのbyteに変換して転送する。(※これがバグかbigを入れてもlittleエンディアンで転送する。)
