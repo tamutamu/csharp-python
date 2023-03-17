@@ -26,9 +26,14 @@ namespace frontend.util
         }
         public int Exit()
         {
+#if DEBUG
             this.process.CloseMainWindow();
+#else
+            this.process.CancelOutputRead();
+            this.process.CancelErrorRead();
+#endif
             this.process.Kill();
-            process.WaitForExit();
+            this.process.WaitForExit();
             this.ExitCode = process.ExitCode;
             return this.ExitCode;
         }
@@ -41,22 +46,26 @@ namespace frontend.util
             psInfo.Arguments = this.Arguments;
 
 #if DEBUG
-            psInfo.CreateNoWindow = true;
+            psInfo.CreateNoWindow = false;
+            psInfo.RedirectStandardInput = false;
+            psInfo.RedirectStandardOutput = false;
+            psInfo.RedirectStandardError = false;
 #else 
             psInfo.CreateNoWindow = true;
-#endif
-            psInfo.UseShellExecute = false;
             psInfo.RedirectStandardInput = true;
             psInfo.RedirectStandardOutput = true;
             psInfo.RedirectStandardError = true;
+
+            process.OutputDataReceived += OupputDataReceivedEventHandler;
+            process.ErrorDataReceived += ErrorDataReceivedEventHandler;
+#endif
+            psInfo.UseShellExecute = false;
 
             // Process p = Process.Start(psInfo);
             process = new System.Diagnostics.Process();
             process.StartInfo = psInfo;
             process.EnableRaisingEvents = true;
 
-            process.OutputDataReceived += OupputDataReceivedEventHandler;
-            process.ErrorDataReceived += ErrorDataReceivedEventHandler;
             process.Exited += new EventHandler(ExitEventHandler);
 
             // プロセスの実行
@@ -69,8 +78,11 @@ namespace frontend.util
             //}
 
             //非同期で出力とエラーの読み取りを開始
+#if DEBUG
+#else
             process.BeginOutputReadLine();
             process.BeginErrorReadLine();
+#endif
 
             if (daemon)
             {

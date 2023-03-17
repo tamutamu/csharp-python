@@ -3,8 +3,9 @@ from logging import getLogger
 
 from command.creator import CommandCreator
 from command.executer import CommandHandler
+from util.log import error_trace
 
-LOGGER = getLogger()
+LOGGER = getLogger(__name__)
 
 
 class Server:
@@ -69,10 +70,13 @@ class Server:
                 length = int.from_bytes(data, "big")
                 # データを受信する。上の受け取ったサイズほど
                 data = client_socket.recv(length)
+                if len(data) <= 0:
+                    continue
                 # 受信されたデータをstr形式でdecodeする。
                 msg = data.decode()
                 # 受信されたメッセージをコンソールに出力する。
                 # LOGGER.info(f"Received from {addr} {msg}")
+
                 ret = request_handler.handle(CommandCreator.create(msg))
 
                 # 受信されたメッセージの前に「echo:」という文字を付ける。
@@ -88,8 +92,9 @@ class Server:
 
         except KeyboardInterrupt:
             LOGGER.warn("KeyboardInterrupt")
-        except:
+        except Exception as e:
             # 接続が切れちゃうとexceptが発生する。
+            error_trace(e)
             LOGGER.info(f"except : {addr}")
         finally:
             # 接続が切れたらsocketリソースを返却する。

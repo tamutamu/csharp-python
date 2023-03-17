@@ -4,15 +4,14 @@ from logging import getLogger
 from threading import Thread
 from time import sleep
 
-LOGGER = getLogger()
+LOGGER = getLogger(__name__)
 
 
-# custom thread
 class CustomThread(Thread):
     # constructor
-    def __init__(self):
+    def __init__(self, **kwargs):
         # execute the base constructor
-        Thread.__init__(self)
+        Thread.__init__(self, **kwargs)
         # set a default value
         self.value = None
 
@@ -43,14 +42,13 @@ class BaseCmd(metaclass=ABCMeta):
         return ret
 
     def execute(self) -> None:
-        thread = CustomThread()
-        th = thread(target=self.__execute, args=())
+        th = CustomThread(target=self.__execute, args=())
         th.daemon = True
         th.start()
         self.thread_id = th.native_id
 
         if self.is_async:
-            return self.thread_id
+            return {"thread_id": self.thread_id}
         else:
             th.join()
             return th.value

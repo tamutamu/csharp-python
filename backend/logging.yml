@@ -2,7 +2,8 @@ version: 1
  
 formatters:
   default:
-    format: '{asctime} {name:<8s} {levelname:<8s} {message}'
+    format: '{asctime} {name:<8s} {levelname:8s} {message}'
+    datefmt: '%Y/%m/%d %H:%M:%S'
     style: '{'
  
 handlers:

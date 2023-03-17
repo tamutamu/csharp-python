@@ -9,7 +9,7 @@ namespace frontend.util
         private static JsonSerializerOptions defaultJsonSerializerOptions = new JsonSerializerOptions
         {
             Encoder = JavaScriptEncoder.Create(UnicodeRanges.All),
-            WriteIndented = true
+            //WriteIndented = true
         };
 
         public static string ToJson(object obj)

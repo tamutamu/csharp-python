@@ -6,9 +6,11 @@ from command.executer import CommandHandler
 from db import db
 from log.config import init_logging
 from server.server import Server
+from util.log import error_trace
 
 # https://qiita.com/HidKamiya/items/9e941a5389ba5eb79df1
 print = functools.partial(print, flush=True)
+LOGGER = getLogger(__name__)
 
 
 def init():
@@ -20,13 +22,15 @@ def init():
 
 
 if __name__ == "__main__":
-    init()
+    try:
+        init()
 
-    LOGGER = getLogger()
-    LOGGER.info("[Server] Start")
+        LOGGER.info("[Server] Start")
 
-    server = Server()
-    port = int(sys.argv[1])
-    server.start(port, CommandHandler())
+        server = Server()
+        port = int(sys.argv[1])
+        server.start(port, CommandHandler())
 
-    LOGGER.info("[Server] End")
+        LOGGER.info("[Server] End")
+    except Exception as e:
+        error_trace(e)
