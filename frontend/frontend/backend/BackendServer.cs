@@ -33,7 +33,7 @@ namespace frontend.backend
 #if DEBUG
             string variable = System.Environment.GetEnvironmentVariable("Path", System.EnvironmentVariableTarget.Process);
             processUtil.FileName = "poetry";
-            processUtil.Arguments = $@"run python src\server.py {this.Port}";
+            processUtil.Arguments = $@"run python src\main.py {this.Port}";
             processUtil.WorkingDirectory = @"../../../../backend/";
 #else 
             processUtil.FileName = "server.exe";
