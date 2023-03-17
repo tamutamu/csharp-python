@@ -3,7 +3,7 @@ import sys
 from logging import getLogger
 
 from command.executer import CommandHandler
-from db import setup_master_table
+from db import db
 from log.config import init_logging
 from server.server import Server
 
@@ -16,7 +16,7 @@ def init():
     init_logging()
 
     # マスターテーブルセットアップ
-    setup_master_table()
+    db.setup()
 
 
 if __name__ == "__main__":

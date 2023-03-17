@@ -41,7 +41,7 @@ namespace frontend.util
             psInfo.Arguments = this.Arguments;
 
 #if DEBUG
-            psInfo.CreateNoWindow = false;
+            psInfo.CreateNoWindow = true;
 #else 
             psInfo.CreateNoWindow = true;
 #endif
