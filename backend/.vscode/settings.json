@@ -10,4 +10,12 @@
         "source.unusedImports",
     ],
     "python.linting.mypyEnabled": true,
+    "python.linting.mypyPath": ".venv/Scripts/mypy.exe",
+    "python.linting.mypyArgs": [
+        "--follow-imports=silent",
+        "--show-column-numbers",
+        "--no-pretty"
+    ],
+    "python.linting.mypyCategorySeverity.note": "Error",
+    "python.linting.enabled": true,
 }

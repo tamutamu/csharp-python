@@ -9,5 +9,5 @@ LOGGER = getLogger(__name__)
 class CommandCreator:
     @classmethod
     def create(cls, cmd_json) -> BaseCmd:
-        LOGGER.info(cmd_json)
+        LOGGER.debug(cmd_json)
         return GetStockPriceCmd(json.loads(cmd_json))

@@ -1,6 +1,7 @@
 import sqlite3
 from logging import getLogger
 
+import ulid
 from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import scoped_session, sessionmaker
@@ -29,11 +30,24 @@ def setup():
 
 
 class BackendResultManager:
-    def __init__(self, thread_id) -> None:
-        self.thread_id = thread_id
+    def __init__(self) -> None:
+        self.id = ulid.new().str
+        self.session = get_session()
+        self.seq = 0
 
-    def add(self, result: BackendResult):
-        pass
+    def add(self, result: str):
+        try:
+            br = BackendResult()
+            br.id = self.id
+            br.seq = self.seq
+            self.session.add(br)
+        except Exception as e:
+            pass
+        finally:
+            self.seq += 1
+
+    def commit(self):
+        self.session.commit()
 
 
 def get_conn():

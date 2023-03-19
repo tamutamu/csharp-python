@@ -9,7 +9,7 @@ Base = declarative_base()
 class BackendResult(Base):
     __tablename__ = "backend_result"
 
-    thread_id: int | None = Column(Integer, primary_key=True)
+    id: str | None = Column(String, primary_key=True)
     seq: int = Column(Integer, autoincrement=True)
     result: str = Column(String)
 
