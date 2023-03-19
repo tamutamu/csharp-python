@@ -1,8 +1,10 @@
-import json
 from abc import ABCMeta, abstractmethod
 from logging import getLogger
 from threading import Thread
 from time import sleep
+
+from db.manager import get_session
+from model.modles import BackendResult
 
 LOGGER = getLogger(__name__)
 
@@ -27,7 +29,7 @@ class CustomThread(Thread):
 
 
 class BaseCmd(metaclass=ABCMeta):
-    def __init__(self, cmd_json: json, is_async=True) -> None:
+    def __init__(self, cmd_json, is_async: bool = True) -> None:
         self.cmd_json = cmd_json
         self.is_async = is_async
 
@@ -41,7 +43,7 @@ class BaseCmd(metaclass=ABCMeta):
 
         return ret
 
-    def execute(self) -> None:
+    def execute(self) -> object:
         th = CustomThread(target=self.__execute, args=())
         th.daemon = True
         th.start()
@@ -65,4 +67,14 @@ class GetStockPriceCmd(BaseCmd):
     def main(self):
         LOGGER.info(self.__class__)
         sleep(6)
-        LOGGER.info(self.cmd_json)
+
+        br = BackendResult()
+        br.thread_id = self.thread_id
+        br.seq = 2
+        br.result = "ok123"
+
+        session = get_session()
+        session.add(br)
+        session.commit()
+
+        return "ok123"

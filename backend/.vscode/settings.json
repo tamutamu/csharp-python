@@ -9,4 +9,5 @@
     "python.analysis.fixAll": [
         "source.unusedImports",
     ],
+    "python.linting.mypyEnabled": true,
 }

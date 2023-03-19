@@ -11,13 +11,15 @@ selenium = "^4.8.2"
 webdriver-manager = "^3.8.5"
 pandas = "^1.5.3"
 ruamel-yaml = "^0.17.21"
-sqlalchemy = "^2.0.6"
+sqlalchemy = {extras = ["mypy"], version = "^2.0.7"}
+requests = "^2.28.2"
 
 [tool.poetry.group.dev.dependencies]
 flake8 = "^6.0.0"
 black = "^23.1.0"
 isort = "^5.12.0"
 mypy = "^1.1.1"
+sqlalchemy = {extras = ["mypy"], version = "^2.0.7"}
 
 [tool.isort]
 profile = "black"
@@ -25,6 +27,9 @@ line_length = 120
 
 [tool.black]
 line-length = 120
+
+[tool.mypy]
+plugins = "sqlalchemy.ext.mypy.plugin"
 
 [build-system]
 requires = ["poetry-core"]
