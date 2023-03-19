@@ -16,14 +16,24 @@ Session: BaseSession = None
 
 global engine
 
+
 def get_session():
     return scoped_session(sessionmaker(autocommit=False, autoflush=False, bind=engine))
+
 
 def setup():
     Base = declarative_base()
     global engine
     engine = create_engine("sqlite:///main_db.sqlite3", echo=True)
     Base.metadata.create_all(bind=engine, tables=[BackendResult.__table__])
+
+
+class BackendResultManager:
+    def __init__(self, thread_id) -> None:
+        self.thread_id = thread_id
+
+    def add(self, result: BackendResult):
+        pass
 
 
 def get_conn():

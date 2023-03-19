@@ -1,7 +1,6 @@
 from abc import ABCMeta, abstractmethod
 from logging import getLogger
 from threading import Thread
-from time import sleep
 
 from db.manager import get_session
 from model.modles import BackendResult
@@ -66,7 +65,6 @@ class BaseCmd(metaclass=ABCMeta):
 class GetStockPriceCmd(BaseCmd):
     def main(self):
         LOGGER.info(self.__class__)
-        sleep(6)
 
         br = BackendResult()
         br.thread_id = self.thread_id
