@@ -9,10 +9,12 @@
     "python.analysis.fixAll": [
         "source.unusedImports",
     ],
+    "python.analysis.typeCheckingMode": "off",
     "python.linting.mypyEnabled": true,
     "python.linting.mypyPath": ".venv/Scripts/mypy.exe",
     "python.linting.mypyArgs": [
         "--follow-imports=silent",
+        "--ignore-missing-imports",
         "--show-column-numbers",
         "--no-pretty"
     ],

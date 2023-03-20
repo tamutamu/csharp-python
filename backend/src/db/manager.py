@@ -35,11 +35,12 @@ class BackendResultManager:
         self.session = get_session()
         self.seq = 0
 
-    def add(self, result: str):
+    def add(self, result):
         try:
             br = BackendResult()
             br.id = self.id
             br.seq = self.seq
+            br.result = result
             self.session.add(br)
         except Exception as e:
             pass
