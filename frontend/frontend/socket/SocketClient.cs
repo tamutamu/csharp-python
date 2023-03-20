@@ -5,7 +5,7 @@ using System.Text;
 
 namespace frontend
 {
-    internal class SocketClientcs
+    internal class SocketClient
     {
         public static String Request(string body, int port)
         {

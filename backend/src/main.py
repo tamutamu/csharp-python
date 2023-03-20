@@ -5,7 +5,7 @@ from logging import getLogger
 from command.executer import CommandHandler
 from db import manager
 from log.config import init_logging
-from server.server import Server
+from socket_lib.server import Server
 from util.log import error_trace
 
 # https://qiita.com/HidKamiya/items/9e941a5389ba5eb79df1

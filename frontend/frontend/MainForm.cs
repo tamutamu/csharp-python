@@ -1,6 +1,8 @@
 ﻿using frontend.backend;
 using frontend.command;
+using frontend.model;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -11,6 +13,8 @@ namespace frontend
         static NLog.Logger LOGGER = NLog.LogManager.GetCurrentClassLogger();
 
         private BackendServer backendServer = null;
+
+        private List<StockPrice> _stockPriceList = new List<StockPrice>();
 
         public MainForm()
         {
@@ -24,6 +28,46 @@ namespace frontend
         {
             //textBox1.AutoSize = false;
             //textBox1.Size = new System.Drawing.Size(251, 28);
+
+            // Python側バックエンドサーバ起動
+            backendServer = new BackendServer();
+            backendServer.OupputDataReceivedEventHandler = BackendServerOutputDataReceived;
+            backendServer.ErrorDataReceivedEventHandler = BackendServerErrorDataReceived;
+            backendServer.ExitEventHandler = BackendServerExited;
+            backendServer.Start();
+
+            // C#側サーバ起動
+            Task.Run(() =>
+            {
+                SocketServer.Start(port: 9999);
+            });
+
+
+            var sp = new StockPrice() { Code = "11", Open = 100, Enable = true };
+            _stockPriceList.Add(sp);
+
+            dgvStockPrice.AutoGenerateColumns = false;
+            dgvStockPrice.DataSource = _stockPriceList;
+
+
+            var textColumn = new DataGridViewTextBoxColumn();
+            textColumn.DataPropertyName = "Code";
+            textColumn.Name = "Code";
+            textColumn.HeaderText = "コード";
+            dgvStockPrice.Columns.Add(textColumn);
+
+            textColumn = new DataGridViewTextBoxColumn();
+            textColumn.DataPropertyName = "Open";
+            textColumn.Name = "Open";
+            textColumn.HeaderText = "始値";
+            dgvStockPrice.Columns.Add(textColumn);
+
+            var checkBoxColumn = new DataGridViewCheckBoxColumn();
+            checkBoxColumn.DataPropertyName = "Enable";
+            checkBoxColumn.Name = "Enable";
+            checkBoxColumn.HeaderText = "有効";
+            dgvStockPrice.Columns.Add(checkBoxColumn);
+
         }
 
         async private void button1_Click(object sender, EventArgs e)
@@ -35,17 +79,11 @@ namespace frontend
         {
             return await Task.Run(() =>
             {
-                backendServer = new BackendServer();
-                backendServer.OupputDataReceivedEventHandler = BackendServerOutputDataReceived;
-                backendServer.ErrorDataReceivedEventHandler = BackendServerErrorDataReceived;
-                backendServer.ExitEventHandler = BackendServerExited;
-
                 this.Invoke((Action)(() =>
                 {
                     btnExit.Enabled = false;
                 }));
 
-                backendServer.Start();
 
                 var StartCommand = new Start(textBox1.Text);
                 var ret = backendServer.Request(StartCommand);

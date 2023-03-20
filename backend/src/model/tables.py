@@ -15,12 +15,3 @@ class BackendResult(Base):
 
     created: datetime = Column("created", DATETIME, default=datetime.now, nullable=False)
     modified: datetime = Column("modified", DATETIME, default=datetime.now, nullable=False)
-
-
-class StockPrice:
-    open = 0
-    high = 0
-    low = 0
-    close = 0
-    vol = 0
-    date = datetime.now

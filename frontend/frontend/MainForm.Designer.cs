@@ -36,12 +36,14 @@
             this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.btnExit = new System.Windows.Forms.Button();
+            this.dgvStockPrice = new System.Windows.Forms.DataGridView();
             this.menuStrip1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dgvStockPrice)).BeginInit();
             this.SuspendLayout();
             // 
             // btnTest1
             // 
-            this.btnTest1.Location = new System.Drawing.Point(639, 91);
+            this.btnTest1.Location = new System.Drawing.Point(720, 97);
             this.btnTest1.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.btnTest1.Name = "btnTest1";
             this.btnTest1.Size = new System.Drawing.Size(135, 44);
@@ -53,23 +55,22 @@
             // textBox1
             // 
             this.textBox1.Font = new System.Drawing.Font("MS UI Gothic", 15.85714F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.textBox1.Location = new System.Drawing.Point(62, 91);
+            this.textBox1.Location = new System.Drawing.Point(25, 95);
             this.textBox1.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(511, 44);
+            this.textBox1.Size = new System.Drawing.Size(659, 44);
             this.textBox1.TabIndex = 1;
             // 
             // rtbMessage
             // 
-            this.rtbMessage.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.rtbMessage.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left)));
             this.rtbMessage.BackColor = System.Drawing.SystemColors.ControlLight;
             this.rtbMessage.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.rtbMessage.Location = new System.Drawing.Point(62, 186);
+            this.rtbMessage.Location = new System.Drawing.Point(720, 186);
             this.rtbMessage.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.rtbMessage.Name = "rtbMessage";
-            this.rtbMessage.Size = new System.Drawing.Size(876, 612);
+            this.rtbMessage.Size = new System.Drawing.Size(451, 612);
             this.rtbMessage.TabIndex = 3;
             this.rtbMessage.Text = "";
             // 
@@ -81,7 +82,7 @@
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.Padding = new System.Windows.Forms.Padding(7, 2, 0, 2);
-            this.menuStrip1.Size = new System.Drawing.Size(1010, 42);
+            this.menuStrip1.Size = new System.Drawing.Size(1200, 38);
             this.menuStrip1.TabIndex = 4;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -100,7 +101,7 @@
             // 
             // btnExit
             // 
-            this.btnExit.Location = new System.Drawing.Point(803, 91);
+            this.btnExit.Location = new System.Drawing.Point(892, 97);
             this.btnExit.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.btnExit.Name = "btnExit";
             this.btnExit.Size = new System.Drawing.Size(135, 46);
@@ -109,11 +110,22 @@
             this.btnExit.UseVisualStyleBackColor = true;
             this.btnExit.Click += new System.EventHandler(this.btnExit_Click);
             // 
+            // dgvStockPrice
+            // 
+            this.dgvStockPrice.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dgvStockPrice.Location = new System.Drawing.Point(25, 186);
+            this.dgvStockPrice.Name = "dgvStockPrice";
+            this.dgvStockPrice.RowHeadersWidth = 72;
+            this.dgvStockPrice.RowTemplate.Height = 30;
+            this.dgvStockPrice.Size = new System.Drawing.Size(659, 612);
+            this.dgvStockPrice.TabIndex = 7;
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(168F, 168F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.ClientSize = new System.Drawing.Size(1010, 848);
+            this.ClientSize = new System.Drawing.Size(1200, 848);
+            this.Controls.Add(this.dgvStockPrice);
             this.Controls.Add(this.btnExit);
             this.Controls.Add(this.rtbMessage);
             this.Controls.Add(this.textBox1);
@@ -126,6 +138,7 @@
             this.Load += new System.EventHandler(this.Form1_Load);
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dgvStockPrice)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -140,6 +153,7 @@
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem1;
         private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
         private System.Windows.Forms.Button btnExit;
+        private System.Windows.Forms.DataGridView dgvStockPrice;
     }
 }
 

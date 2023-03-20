@@ -8,7 +8,7 @@ from sqlalchemy.orm import scoped_session, sessionmaker
 from sqlalchemy.orm.session import Session as BaseSession
 
 import config
-from model.modles import BackendResult
+from model.tables import BackendResult
 from util.log import error_trace
 
 LOGGER = getLogger(__name__)

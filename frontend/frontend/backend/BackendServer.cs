@@ -61,7 +61,7 @@ namespace frontend.backend
         public string Request(IBackendCmd cmd)
         {
             var body = JsonUtil.ToJson(cmd);
-            var ret = SocketClientcs.Request(body, this.Port);
+            var ret = SocketClient.Request(body, this.Port);
             return ret;
         }
     }
