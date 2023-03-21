@@ -5,7 +5,7 @@ class Client:
     def __init__(self, host) -> None:
         self.host = host
 
-    def send(self, port):
+    def send(self, port, doRecv=True):
         # ソケットを生成する。
         client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         # connect関数でサーバーに接続する。
@@ -24,16 +24,17 @@ class Client:
             # データを送信する。
             client_socket.sendall(data)
 
-            # サーバーからデータサイズを受信する。
-            data = client_socket.recv(4)
-            # データ長さはbigエンディアンでintを変換する。(※これがバグかbigを入れてもlittleエンディアンで転送する。)
-            length = int.from_bytes(data, "big")
-            # データの長さを受信する。
-            data = client_socket.recv(length)
-            # データを受信する。
-            msg = data.decode()
-            # データをコンソールで出力する。
-            print("Received from : ", msg)
+            if doRecv:
+                # サーバーからデータサイズを受信する。
+                data = client_socket.recv(4)
+                # データ長さはbigエンディアンでintを変換する。(※これがバグかbigを入れてもlittleエンディアンで転送する。)
+                length = int.from_bytes(data, "big")
+                # データの長さを受信する。
+                data = client_socket.recv(length)
+                # データを受信する。
+                msg = data.decode()
+                # データをコンソールで出力する。
+                print("Received from : ", msg)
 
         # ソケットリソースを返却する。
         client_socket.close()

@@ -43,10 +43,9 @@
             // 
             // btnTest1
             // 
-            this.btnTest1.Location = new System.Drawing.Point(720, 97);
-            this.btnTest1.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.btnTest1.Location = new System.Drawing.Point(617, 83);
             this.btnTest1.Name = "btnTest1";
-            this.btnTest1.Size = new System.Drawing.Size(135, 44);
+            this.btnTest1.Size = new System.Drawing.Size(116, 38);
             this.btnTest1.TabIndex = 0;
             this.btnTest1.Text = "テスト";
             this.btnTest1.UseVisualStyleBackColor = true;
@@ -55,41 +54,41 @@
             // textBox1
             // 
             this.textBox1.Font = new System.Drawing.Font("MS UI Gothic", 15.85714F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.textBox1.Location = new System.Drawing.Point(25, 95);
-            this.textBox1.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.textBox1.Location = new System.Drawing.Point(21, 81);
             this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(659, 44);
+            this.textBox1.Size = new System.Drawing.Size(565, 39);
             this.textBox1.TabIndex = 1;
             // 
             // rtbMessage
             // 
-            this.rtbMessage.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left)));
+            this.rtbMessage.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.rtbMessage.BackColor = System.Drawing.SystemColors.ControlLight;
             this.rtbMessage.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.rtbMessage.Location = new System.Drawing.Point(720, 186);
-            this.rtbMessage.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.rtbMessage.Location = new System.Drawing.Point(617, 159);
             this.rtbMessage.Name = "rtbMessage";
-            this.rtbMessage.Size = new System.Drawing.Size(451, 612);
+            this.rtbMessage.Size = new System.Drawing.Size(387, 525);
             this.rtbMessage.TabIndex = 3;
             this.rtbMessage.Text = "";
             // 
             // menuStrip1
             // 
+            this.menuStrip1.GripMargin = new System.Windows.Forms.Padding(2, 2, 0, 2);
             this.menuStrip1.ImageScalingSize = new System.Drawing.Size(24, 24);
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripMenuItem1});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Padding = new System.Windows.Forms.Padding(7, 2, 0, 2);
-            this.menuStrip1.Size = new System.Drawing.Size(1200, 38);
+            this.menuStrip1.Padding = new System.Windows.Forms.Padding(6, 2, 0, 2);
+            this.menuStrip1.Size = new System.Drawing.Size(1029, 36);
             this.menuStrip1.TabIndex = 4;
             this.menuStrip1.Text = "menuStrip1";
             // 
             // toolStripMenuItem1
             // 
             this.toolStripMenuItem1.Name = "toolStripMenuItem1";
-            this.toolStripMenuItem1.Size = new System.Drawing.Size(112, 34);
+            this.toolStripMenuItem1.Size = new System.Drawing.Size(98, 29);
             this.toolStripMenuItem1.Text = "ファイル(F)";
             // 
             // contextMenuStrip1
@@ -101,10 +100,9 @@
             // 
             // btnExit
             // 
-            this.btnExit.Location = new System.Drawing.Point(892, 97);
-            this.btnExit.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.btnExit.Location = new System.Drawing.Point(765, 83);
             this.btnExit.Name = "btnExit";
-            this.btnExit.Size = new System.Drawing.Size(135, 46);
+            this.btnExit.Size = new System.Drawing.Size(116, 39);
             this.btnExit.TabIndex = 6;
             this.btnExit.Text = "停  止";
             this.btnExit.UseVisualStyleBackColor = true;
@@ -112,19 +110,23 @@
             // 
             // dgvStockPrice
             // 
+            this.dgvStockPrice.AllowUserToAddRows = false;
+            this.dgvStockPrice.AllowUserToDeleteRows = false;
+            this.dgvStockPrice.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left)));
             this.dgvStockPrice.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dgvStockPrice.Location = new System.Drawing.Point(25, 186);
+            this.dgvStockPrice.Location = new System.Drawing.Point(21, 159);
             this.dgvStockPrice.Name = "dgvStockPrice";
             this.dgvStockPrice.RowHeadersWidth = 72;
             this.dgvStockPrice.RowTemplate.Height = 30;
-            this.dgvStockPrice.Size = new System.Drawing.Size(659, 612);
+            this.dgvStockPrice.Size = new System.Drawing.Size(565, 525);
             this.dgvStockPrice.TabIndex = 7;
             // 
             // MainForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(168F, 168F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(144F, 144F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.ClientSize = new System.Drawing.Size(1200, 848);
+            this.ClientSize = new System.Drawing.Size(1029, 727);
             this.Controls.Add(this.dgvStockPrice);
             this.Controls.Add(this.btnExit);
             this.Controls.Add(this.rtbMessage);
@@ -132,7 +134,6 @@
             this.Controls.Add(this.btnTest1);
             this.Controls.Add(this.menuStrip1);
             this.MainMenuStrip = this.menuStrip1;
-            this.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.Name = "MainForm";
             this.Text = "Form1";
             this.Load += new System.EventHandler(this.Form1_Load);

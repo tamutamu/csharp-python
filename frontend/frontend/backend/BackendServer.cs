@@ -20,7 +20,7 @@ namespace frontend.backend
         {
         }
 
-        public void Start()
+        public void Start(int frontendServerPort)
         {
             processUtil = new ProcessUtil();
             processUtil.OupputDataReceivedEventHandler = OupputDataReceivedEventHandler;
@@ -33,7 +33,7 @@ namespace frontend.backend
 #if DEBUG
             string variable = System.Environment.GetEnvironmentVariable("Path", System.EnvironmentVariableTarget.Process);
             processUtil.FileName = "poetry";
-            processUtil.Arguments = $@"run python src\main.py {this.Port}";
+            processUtil.Arguments = $@"run python src\main.py {this.Port} {frontendServerPort}";
             processUtil.WorkingDirectory = @"../../../../backend/";
 #else 
             processUtil.FileName = "server.exe";

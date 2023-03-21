@@ -6,18 +6,17 @@ using System.Threading;
 
 namespace frontend
 {
-    internal class SocketServer
+    internal sealed class FrontendServer
     {
-        public static void Start(int port)
+        public static void Start(int port, MainForm mainForm)
         {
             // serverソケットを生成する。
             using (var server = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp))
             {
-                // ipはローカルでポートは9999でlisten待機する。
-                server.Bind(new IPEndPoint(IPAddress.Any, 9999));
+                server.Bind(new IPEndPoint(IPAddress.Any, port));
                 server.Listen(20);
                 // コンソールに出力
-                Console.WriteLine("Server Start... Listen port 9999...");
+                Console.WriteLine($"Server Start... Listen port {port}...");
                 try
                 {
                     while (true)
@@ -44,16 +43,24 @@ namespace frontend
 
                                     // byteをUTF8エンコードでstringタイプで変換する。
                                     var msg = Encoding.UTF8.GetString(data);
+
+                                    if (msg != "")
+                                    {
+                                        mainForm.Invoke(new Action(() =>
+                                        {
+                                            mainForm.RefreshData();
+                                        }));
+                                    }
                                     // データをコンソールに出力する。
-                                    Console.WriteLine(msg);
+                                    //Console.WriteLine(msg);
                                     // メッセージでechoを文字に付ける。
-                                    msg = "C# server echo : " + msg;
+                                    //msg = "C# server echo : " + msg;
                                     // データをUTF8エンコードでbyte形式で変換する。
-                                    data = Encoding.UTF8.GetBytes(msg);
+                                    //data = Encoding.UTF8.GetBytes(msg);
                                     // データの長さをクライアントで転送する。
-                                    client.Send(BitConverter.GetBytes(data.Length));
+                                    //client.Send(BitConverter.GetBytes(data.Length));
                                     // データを転送する。
-                                    client.Send(data, data.Length, SocketFlags.None);
+                                    //client.Send(data, data.Length, SocketFlags.None);
                                 }
                             }
                             catch (Exception)

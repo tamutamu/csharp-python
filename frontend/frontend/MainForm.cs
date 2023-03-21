@@ -1,8 +1,12 @@
 ﻿using frontend.backend;
 using frontend.command;
+using frontend.db;
 using frontend.model;
+using frontend.util;
 using System;
-using System.Collections.Generic;
+using System.ComponentModel;
+using System.Linq;
+using System.Text.Json;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -11,63 +15,78 @@ namespace frontend
     public partial class MainForm : Form
     {
         static NLog.Logger LOGGER = NLog.LogManager.GetCurrentClassLogger();
-
         private BackendServer backendServer = null;
 
-        private List<StockPrice> _stockPriceList = new List<StockPrice>();
+        private BindingList<StockPrice> _stockPriceList = new BindingList<StockPrice>();
+        private BindingSource source = new BindingSource();
 
         public MainForm()
         {
             InitializeComponent();
-
-            //ApplicationExitイベントハンドラを追加
             Application.ApplicationExit += new EventHandler(Application_ApplicationExit);
         }
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            //textBox1.AutoSize = false;
-            //textBox1.Size = new System.Drawing.Size(251, 28);
+            // C#側サーバ起動
+            var frontendServerPort = NetworkUtil.GetFreePort();
+            Task.Run(() =>
+            {
+                FrontendServer.Start(port: 9999, this);
+            });
 
             // Python側バックエンドサーバ起動
             backendServer = new BackendServer();
             backendServer.OupputDataReceivedEventHandler = BackendServerOutputDataReceived;
             backendServer.ErrorDataReceivedEventHandler = BackendServerErrorDataReceived;
             backendServer.ExitEventHandler = BackendServerExited;
-            backendServer.Start();
+            backendServer.Start(frontendServerPort);
 
-            // C#側サーバ起動
-            Task.Run(() =>
-            {
-                SocketServer.Start(port: 9999);
-            });
+            // DataGridView初期化
+            SetupDataGridView();
+        }
 
-
-            var sp = new StockPrice() { Code = "11", Open = 100, Enable = true };
-            _stockPriceList.Add(sp);
+        private void SetupDataGridView()
+        {
+            //this.source.DataSource = _stockPriceList;
 
             dgvStockPrice.AutoGenerateColumns = false;
+            dgvStockPrice.RowHeadersVisible = false;
+            dgvStockPrice.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
             dgvStockPrice.DataSource = _stockPriceList;
 
+            Action<string, string, string> genColumn = (dpName, name, headerText) =>
+            {
+                var textColumn = new DataGridViewTextBoxColumn();
+                textColumn.DataPropertyName = dpName;
+                textColumn.Name = name;
+                textColumn.HeaderText = headerText;
+                dgvStockPrice.Columns.Add(textColumn);
+            };
 
-            var textColumn = new DataGridViewTextBoxColumn();
-            textColumn.DataPropertyName = "Code";
-            textColumn.Name = "Code";
-            textColumn.HeaderText = "コード";
-            dgvStockPrice.Columns.Add(textColumn);
+            genColumn("Code", "Code", "コード");
+            genColumn("Open", "Open", "始値");
+            genColumn("Enable", "Enable", "有効");
+        }
 
-            textColumn = new DataGridViewTextBoxColumn();
-            textColumn.DataPropertyName = "Open";
-            textColumn.Name = "Open";
-            textColumn.HeaderText = "始値";
-            dgvStockPrice.Columns.Add(textColumn);
+        public void RefreshData()
+        {
+            var dbm = new DBManager();
+            var dataList = dbm.QueryList();
 
-            var checkBoxColumn = new DataGridViewCheckBoxColumn();
-            checkBoxColumn.DataPropertyName = "Enable";
-            checkBoxColumn.Name = "Enable";
-            checkBoxColumn.HeaderText = "有効";
-            dgvStockPrice.Columns.Add(checkBoxColumn);
+            _stockPriceList.Clear();
 
+            var _list = dataList.Select(d =>
+            {
+                var result = d.Result;
+                var sp = JsonSerializer.Deserialize<StockPrice>(result);
+                return new StockPrice() { Open = sp.Open, Enable = sp.Enable };
+            });
+
+            foreach (var sp in _list)
+            {
+                _stockPriceList.Add(sp);
+            }
         }
 
         async private void button1_Click(object sender, EventArgs e)
@@ -83,7 +102,6 @@ namespace frontend
                 {
                     btnExit.Enabled = false;
                 }));
-
 
                 var StartCommand = new Start(textBox1.Text);
                 var ret = backendServer.Request(StartCommand);
@@ -116,7 +134,7 @@ namespace frontend
             {
                 this.Invoke((Action)(() =>
                 {
-                    rtbMessage.AppendText(e.Data + "\n");
+                    rtbMessage.AppendText("[ERROR] " + e.Data + "\n");
                 }));
             }
         }
@@ -132,10 +150,7 @@ namespace frontend
             Application.ApplicationExit -= new EventHandler(Application_ApplicationExit);
         }
 
-        private void contextMenuStrip1_Opening(object sender, System.ComponentModel.CancelEventArgs e)
-        {
-
-        }
+        private void contextMenuStrip1_Opening(object sender, System.ComponentModel.CancelEventArgs e) { }
 
         private void btnExit_Click(object sender, EventArgs e)
         {

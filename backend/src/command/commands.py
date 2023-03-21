@@ -22,7 +22,7 @@ class GetStockPriceCmd(BaseCmd):
             brm.add(result)
             brm.commit()
             LOGGER.info(i)
-            client.send(9999)
+            client.send(9999, False)
             sleep(8)
 
         return "ok end"
