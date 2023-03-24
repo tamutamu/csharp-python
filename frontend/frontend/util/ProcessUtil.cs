@@ -41,21 +41,20 @@ namespace frontend.util
 
         public void Execute(bool daemon = false)
         {
-            process = new System.Diagnostics.Process();
+            process = new Process();
 
             ProcessStartInfo psInfo = new ProcessStartInfo();
             psInfo.FileName = this.FileName;
             psInfo.WorkingDirectory = this.WorkingDirectory;
             psInfo.Arguments = this.Arguments;
+            psInfo.RedirectStandardInput = true;
 
 #if DEBUG
             psInfo.CreateNoWindow = false;
-            psInfo.RedirectStandardInput = false;
             psInfo.RedirectStandardOutput = false;
             psInfo.RedirectStandardError = false;
 #else 
             psInfo.CreateNoWindow = true;
-            psInfo.RedirectStandardInput = true;
             psInfo.RedirectStandardOutput = true;
             psInfo.RedirectStandardError = true;
 

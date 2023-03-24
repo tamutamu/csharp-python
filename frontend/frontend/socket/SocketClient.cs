@@ -16,7 +16,7 @@ namespace frontend
             {
                 //client.Connect(new IPEndPoint(IPAddress.Parse("127.0.0.1"), port));
                 var clientDone = client.BeginConnect(new IPEndPoint(IPAddress.Parse("127.0.0.1"), port), null, null);
-                var ret = clientDone.AsyncWaitHandle.WaitOne(10000, true);
+                var ret = clientDone.AsyncWaitHandle.WaitOne(30000, true);
                 if (!ret)
                 {
                     //タイムアウトの例外
