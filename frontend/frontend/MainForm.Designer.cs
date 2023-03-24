@@ -37,6 +37,7 @@
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.btnExit = new System.Windows.Forms.Button();
             this.dgvStockPrice = new System.Windows.Forms.DataGridView();
+            this.btnPreLogin = new System.Windows.Forms.Button();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvStockPrice)).BeginInit();
             this.SuspendLayout();
@@ -45,7 +46,7 @@
             // 
             this.btnTest1.Location = new System.Drawing.Point(617, 83);
             this.btnTest1.Name = "btnTest1";
-            this.btnTest1.Size = new System.Drawing.Size(116, 38);
+            this.btnTest1.Size = new System.Drawing.Size(93, 38);
             this.btnTest1.TabIndex = 0;
             this.btnTest1.Text = "テスト";
             this.btnTest1.UseVisualStyleBackColor = true;
@@ -80,8 +81,7 @@
             this.toolStripMenuItem1});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Padding = new System.Windows.Forms.Padding(6, 2, 0, 2);
-            this.menuStrip1.Size = new System.Drawing.Size(1029, 36);
+            this.menuStrip1.Size = new System.Drawing.Size(1029, 33);
             this.menuStrip1.TabIndex = 4;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -100,9 +100,9 @@
             // 
             // btnExit
             // 
-            this.btnExit.Location = new System.Drawing.Point(765, 83);
+            this.btnExit.Location = new System.Drawing.Point(873, 81);
             this.btnExit.Name = "btnExit";
-            this.btnExit.Size = new System.Drawing.Size(116, 39);
+            this.btnExit.Size = new System.Drawing.Size(91, 39);
             this.btnExit.TabIndex = 6;
             this.btnExit.Text = "停  止";
             this.btnExit.UseVisualStyleBackColor = true;
@@ -122,11 +122,22 @@
             this.dgvStockPrice.Size = new System.Drawing.Size(565, 525);
             this.dgvStockPrice.TabIndex = 7;
             // 
+            // btnPreLogin
+            // 
+            this.btnPreLogin.Location = new System.Drawing.Point(734, 83);
+            this.btnPreLogin.Name = "btnPreLogin";
+            this.btnPreLogin.Size = new System.Drawing.Size(111, 38);
+            this.btnPreLogin.TabIndex = 8;
+            this.btnPreLogin.Text = "事前ログイン";
+            this.btnPreLogin.UseVisualStyleBackColor = true;
+            this.btnPreLogin.Click += new System.EventHandler(this.btnPreLogin_Click);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(144F, 144F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.ClientSize = new System.Drawing.Size(1029, 727);
+            this.Controls.Add(this.btnPreLogin);
             this.Controls.Add(this.dgvStockPrice);
             this.Controls.Add(this.btnExit);
             this.Controls.Add(this.rtbMessage);
@@ -155,6 +166,7 @@
         private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
         private System.Windows.Forms.Button btnExit;
         private System.Windows.Forms.DataGridView dgvStockPrice;
+        private System.Windows.Forms.Button btnPreLogin;
     }
 }
 

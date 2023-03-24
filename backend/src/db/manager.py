@@ -1,13 +1,12 @@
 import sqlite3
 from logging import getLogger
 
-import ulid
 from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import scoped_session, sessionmaker
 from sqlalchemy.orm.session import Session as BaseSession
 
-import config
+from config import Config
 from model.tables import BackendResult
 from util.log import error_trace
 
@@ -30,8 +29,8 @@ def setup():
 
 
 class BackendResultManager:
-    def __init__(self) -> None:
-        self.id = ulid.new().str
+    def __init__(self, process_id) -> None:
+        self.id = process_id
         self.session = get_session()
         self.seq = 0
 
@@ -52,7 +51,7 @@ class BackendResultManager:
 
 
 def get_conn():
-    dbname = config.DB_NAME
+    dbname = Config.FRONTEND_SERVER_PORT
     return sqlite3.connect(dbname)
 
 
@@ -67,3 +66,4 @@ def exec_sql(sql_list):
         error_trace(e)
     finally:
         conn.close()
+

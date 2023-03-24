@@ -7,22 +7,36 @@
 
     abstract public class BackendCmd : IBackendCmd
     {
-        public virtual string _CommandName { get; }
+        public virtual string _CommandName { get { return this.GetType().Name; } }
     }
 
-    public class Start : BackendCmd
+    public class StartCmd : BackendCmd
     {
-        public Start(string Text)
+        public StartCmd(string Text)
         {
             this.Text = Text;
         }
 
-        public override string _CommandName { get; } = "START";
         public string Text { get; }
     }
 
-    public class Exit : BackendCmd
+    public class ExitCmd : BackendCmd
     {
-        public override string _CommandName { get; } = "EXIT";
+    }
+
+    public class PreLoginCmd : BackendCmd
+    {
+        public PreLoginCmd(string yahooUserName, string yahooUserPass, string keepaUserName, string keepaUserPass)
+        {
+            this.yahooUserName = yahooUserName;
+            this.yahooUserPass = yahooUserPass;
+            this.keepaUserName = keepaUserName;
+            this.keepaUserPass = keepaUserPass;
+        }
+
+        public string yahooUserName { get; }
+        public string yahooUserPass { get; }
+        public string keepaUserName { get; }
+        public string keepaUserPass { get; }
     }
 }

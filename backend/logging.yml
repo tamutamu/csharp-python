@@ -21,7 +21,7 @@ handlers:
     formatter: default
  
 root:
-  level: INFO
+  level: DEBUG
   handlers:
     - console_handler
     - file_handler

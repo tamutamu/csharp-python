@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using System.IO;
 using System.Text;
 
 namespace frontend.util
@@ -40,6 +41,8 @@ namespace frontend.util
 
         public void Execute(bool daemon = false)
         {
+            process = new System.Diagnostics.Process();
+
             ProcessStartInfo psInfo = new ProcessStartInfo();
             psInfo.FileName = this.FileName;
             psInfo.WorkingDirectory = this.WorkingDirectory;
@@ -62,7 +65,6 @@ namespace frontend.util
             psInfo.UseShellExecute = false;
 
             // Process p = Process.Start(psInfo);
-            process = new System.Diagnostics.Process();
             process.StartInfo = psInfo;
             process.EnableRaisingEvents = true;
 
@@ -90,6 +92,15 @@ namespace frontend.util
                 process.WaitForExit();
                 this.ExitCode = process.ExitCode;
                 this.StandardOutput = standardOutputStringBuilder.ToString();
+            }
+        }
+
+        public void SendInputToProcess(ConsoleKey key)
+        {
+            // 標準入力への書き込み
+            using (StreamWriter sw = process.StandardInput)
+            {
+                sw.Write(key);
             }
         }
     }

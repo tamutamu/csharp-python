@@ -2,6 +2,8 @@ from abc import ABCMeta, abstractmethod
 from logging import getLogger
 from threading import Thread
 
+import ulid
+
 LOGGER = getLogger(__name__)
 
 
@@ -36,17 +38,16 @@ class BaseCmd(metaclass=ABCMeta):
         self.before()
         ret = self.main()
         self.after()
-
         return ret
 
     def execute(self) -> object:
         th = CustomThread(target=self.__execute, args=())
-        self.thread_id = th.native_id
+        self.process_id = ulid.new().str
         th.daemon = True
         th.start()
 
         if self.is_async:
-            return {"thread_id": self.thread_id}
+            return {"process_id": self.process_id}
         else:
             th.join()
             return th.value

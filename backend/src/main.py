@@ -2,7 +2,8 @@ import functools
 import sys
 from logging import getLogger
 
-from command.executer import CommandHandler
+from command.processor import CommandProcessor
+from config import Config
 from db import manager
 from log.config import init_logging
 from socket_lib.server import Server
@@ -20,6 +21,8 @@ def init():
     # マスターテーブルセットアップ
     manager.setup()
 
+    Config.FRONTEND_SERVER_PORT = int(sys.argv[1])
+
 
 if __name__ == "__main__":
     try:
@@ -28,8 +31,7 @@ if __name__ == "__main__":
         LOGGER.info("[Server] Start")
 
         server = Server()
-        port = int(sys.argv[1])
-        server.start(port, CommandHandler())
+        server.start(Config.FRONTEND_SERVER_PORT, CommandProcessor())
 
         LOGGER.info("[Server] End")
     except Exception as e:

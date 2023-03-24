@@ -1,8 +1,7 @@
 import socket
 from logging import getLogger
 
-from command.creator import CommandCreator
-from command.executer import CommandHandler
+from command.processor import CommandProcessor
 from util.log import error_trace
 
 LOGGER = getLogger(__name__)
@@ -12,7 +11,7 @@ class Server:
     def __init__(self) -> None:
         pass
 
-    def start(self, port, request_handler: CommandHandler):
+    def start(self, port, processor: CommandProcessor):
         LOGGER.info(f"--- Start(port = {port}) ---")
 
         # ソケットを生成する。
@@ -38,7 +37,7 @@ class Server:
                     # clientから接続すればacceptが発生する。
                     # clientソケットとaddr(アドレス)をタプルで受け取る。
                     client_socket, addr = server_socket.accept()
-                    self.binder(client_socket, addr, request_handler)
+                    self.request_handle(client_socket, addr, processor)
 
                 except socket.timeout:
                     pass
@@ -49,7 +48,7 @@ class Server:
             # エラーが発生すればサーバーソケットを閉める。
             server_socket.close()
 
-    def binder(self, client_socket, addr, request_handler: CommandHandler):
+    def request_handle(self, client_socket, addr, processor: CommandProcessor):
         """_summary_
         binder関数はサーバーからacceptしたら生成されるsocketインスタンスを通ってclientから
         データを受信するとecho形で再送信するメソッドだ。
@@ -73,11 +72,11 @@ class Server:
                 if len(data) <= 0:
                     continue
                 # 受信されたデータをstr形式でdecodeする。
-                msg = data.decode()
+                req = data.decode()
                 # 受信されたメッセージをコンソールに出力する。
                 # LOGGER.info(f"Received from {addr} {msg}")
 
-                ret = request_handler.handle(CommandCreator.create(msg))
+                ret = processor.process(req)
 
                 # 受信されたメッセージの前に「echo:」という文字を付ける。
                 # msg = "echo : " + msg

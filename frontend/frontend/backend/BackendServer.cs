@@ -36,12 +36,18 @@ namespace frontend.backend
             processUtil.Arguments = $@"run python src\main.py {this.Port} {frontendServerPort}";
             processUtil.WorkingDirectory = @"../../../../backend/";
 #else 
-            processUtil.FileName = "server.exe";
-            processUtil.Arguments = $"{this.Port}";
-            processUtil.WorkingDirectory = @"../../../../backend/bin/";
+            string variable = System.Environment.GetEnvironmentVariable("Path", System.EnvironmentVariableTarget.Process);
+            processUtil.FileName = "poetry";
+            processUtil.Arguments = $@"run python src\main.py {this.Port} {frontendServerPort}";
+            processUtil.WorkingDirectory = System.IO.Path.GetFullPath(@"../../../../../backend");
 #endif
 
             processUtil.Execute();
+        }
+
+        public void PressEnter()
+        {
+            processUtil.SendInputToProcess(ConsoleKey.Enter);
         }
 
         public int Stop()

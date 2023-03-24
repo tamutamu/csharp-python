@@ -174,3 +174,4 @@ poetry.toml
 
 logs/
 main_db.sqlite3
+Userdata

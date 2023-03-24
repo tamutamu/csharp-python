@@ -16,6 +16,7 @@ namespace frontend
     {
         static NLog.Logger LOGGER = NLog.LogManager.GetCurrentClassLogger();
         private BackendServer backendServer = null;
+        private int FrontendServerPort = 0;
 
         private BindingList<StockPrice> _stockPriceList = new BindingList<StockPrice>();
         private BindingSource source = new BindingSource();
@@ -29,18 +30,11 @@ namespace frontend
         private void Form1_Load(object sender, EventArgs e)
         {
             // C#側サーバ起動
-            var frontendServerPort = NetworkUtil.GetFreePort();
+            FrontendServerPort = NetworkUtil.GetFreePort();
             Task.Run(() =>
             {
-                FrontendServer.Start(port: 9999, this);
+                FrontendServer.Start(port: FrontendServerPort, this);
             });
-
-            // Python側バックエンドサーバ起動
-            backendServer = new BackendServer();
-            backendServer.OupputDataReceivedEventHandler = BackendServerOutputDataReceived;
-            backendServer.ErrorDataReceivedEventHandler = BackendServerErrorDataReceived;
-            backendServer.ExitEventHandler = BackendServerExited;
-            backendServer.Start(frontendServerPort);
 
             // DataGridView初期化
             SetupDataGridView();
@@ -91,10 +85,11 @@ namespace frontend
 
         async private void button1_Click(object sender, EventArgs e)
         {
-            var ret = await RequestBackend(textBox1.Text);
+            var startCommand = new StartCmd(textBox1.Text);
+            var ret = await RequestBackend(startCommand);
         }
 
-        private async Task<string> RequestBackend(string data)
+        private async Task<string> RequestBackend(BackendCmd cmd)
         {
             return await Task.Run(() =>
             {
@@ -103,8 +98,7 @@ namespace frontend
                     btnExit.Enabled = false;
                 }));
 
-                var StartCommand = new Start(textBox1.Text);
-                var ret = backendServer.Request(StartCommand);
+                var ret = backendServer.Request(cmd);
 
                 this.Invoke((Action)(() =>
                 {
@@ -155,6 +149,22 @@ namespace frontend
         private void btnExit_Click(object sender, EventArgs e)
         {
             backendServer?.Stop();
+        }
+
+        async private void btnPreLogin_Click(object sender, EventArgs e)
+        {
+            // Python側バックエンドサーバ起動
+            backendServer = new BackendServer();
+            backendServer.OupputDataReceivedEventHandler = BackendServerOutputDataReceived;
+            backendServer.ErrorDataReceivedEventHandler = BackendServerErrorDataReceived;
+            backendServer.ExitEventHandler = BackendServerExited;
+            var _frontport = FrontendServerPort = NetworkUtil.GetFreePort();
+            backendServer.Start(_frontport);
+
+            var ret = await RequestBackend(new PreLoginCmd("nao_tamura7", "u8rwb2vyfem3", "", ""));
+
+            MessageBox.Show("ログインできました？");
+            backendServer.PressEnter();
         }
     }
 }
