@@ -14,7 +14,7 @@ namespace frontend
             using (var server = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp))
             {
                 server.Bind(new IPEndPoint(IPAddress.Any, port));
-                server.Listen(20);
+                server.Listen(3);
                 // コンソールに出力
                 Console.WriteLine($"Server Start... Listen port {port}...");
                 try
@@ -61,11 +61,17 @@ namespace frontend
                                     //client.Send(BitConverter.GetBytes(data.Length));
                                     // データを転送する。
                                     //client.Send(data, data.Length, SocketFlags.None);
+                                    break;
                                 }
                             }
                             catch (Exception)
                             {
                                 // Exceptionが発生すれば(予期しない接続終了)client socketを閉める。
+                                client.Close();
+                            }
+                            finally
+                            {
+                                client.Shutdown(SocketShutdown.Both);
                                 client.Close();
                             }
                             // serverでclientが接続すればThreadPoolでThreadが生成されました。

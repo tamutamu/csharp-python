@@ -8,18 +8,48 @@ from webdriver_manager.chrome import ChromeDriverManager
 
 
 class ChromeDriver(webdriver.Chrome):
-    def __init__(self, profile_name="", disable_extensions=True, is_headless=True, is_mobile=False):
+    def __init__(
+        self, profile_name="", disable_extensions=True, is_headless=True, is_mobile=False, is_image_no_load=False
+    ):
         options = webdriver.ChromeOptions()
-        options.add_argument("start-maximized")  # https://stackoverflow.com/a/26283818/1689770
+        # options.add_argument("start-maximized")  # https://stackoverflow.com/a/26283818/1689770
         options.add_argument("--disable-logging")  # Logger
-        options.add_argument("enable-automation")  # https://stackoverflow.com/a/43840128/1689770
+        # options.add_argument("enable-automation")  # https://stackoverflow.com/a/43840128/1689770
+        options.add_experimental_option("excludeSwitches", ["enable-automation"])
         options.add_argument("--no-sandbox")  # https://stackoverflow.com/a/50725918/1689770
         options.add_argument("--disable-infobars")  # https://stackoverflow.com/a/43840128/1689770
         options.add_argument("--disable-dev-shm-usage")  # https://stackoverflow.com/a/50725918/1689770
         options.add_argument("--disable-browser-side-navigation")  # https://stackoverflow.com/a/49123152/1689770
         options.add_argument("--disable-gpu")  # https://stackoverflow.com/questions/51959986
         options.add_argument("--ignore-certificate-errors")  # https://stackoverflow.com/questions/37883759
+        options.add_argument("--allow-running-insecure-content")
+        options.add_argument("--disable-web-security")
         options.add_argument("--ignore-ssl-errors")  # https://stackoverflow.com/questions/37883759
+        options.add_argument("--disable-desktop-notifications")
+
+        # 意味あるのか？？
+        options.add_argument('--proxy-server="direct://"')
+        options.add_argument("--proxy-bypass-list=*")
+
+        # 画像を読み込まないで軽くする
+        if is_image_no_load:
+            options.add_argument("--blink-settings=imagesEnabled=false")
+
+        # https://kacchanblog.com/programming/jidoukounyu/selenium-faster
+        options.add_argument("--lang=ja")
+        options.page_load_strategy = "eager"
+
+        options.add_experimental_option(
+            "useAutomationExtension", False
+        )  # 拡張機能の自動更新をさせない（アプリ側の自動アップデートとドライバーの互換性によるエラーを回避）
+
+        UA = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36"
+        options.add_argument(f"--user-agent={UA}")
+
+        # ログイン後の保存ポップアップを非表示設定
+        options.add_experimental_option(
+            "prefs", {"credentials_enable_service": False, "profile": {"password_manager_enabled": False}}
+        )
 
         if profile_name != "":
             self.userdata_dir = self.create_userdata(profile_name)
@@ -52,6 +82,11 @@ class ChromeDriver(webdriver.Chrome):
 
         super().__init__(path, chrome_options=options, service=chrome_service)
         self.set_page_load_timeout(30)
+
+        # https://qiita.com/r_ishimori/items/4ed251f0d166d5c9cee1
+        self.execute_script(
+            "const newProto = navigator.__proto__;delete newProto.webdriver;navigator.__proto__ = newProto;"
+        )
 
     def create_userdata(self, profile_name):
         userdata_dir = os.path.join(os.getcwd(), "Userdata", profile_name)

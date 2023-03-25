@@ -28,7 +28,7 @@ class Server:
         server_socket.settimeout(2)
 
         # server設定が完了すればlistenを開始する。
-        server_socket.listen()
+        server_socket.listen(5)
 
         try:
             # サーバーは複数クライアントから接続するので無限ループを使う。
@@ -88,6 +88,7 @@ class Server:
                 client_socket.sendall(length.to_bytes(4, byteorder="big"))
                 # データをクライアントに転送する。
                 client_socket.sendall(data)
+                break
 
         except KeyboardInterrupt:
             LOGGER.warn("KeyboardInterrupt")

@@ -11,7 +11,6 @@ namespace frontend.db
         public List<BackendResult> QueryList()
         {
             List<BackendResult> resultList = new List<BackendResult>();
-
             using (var cn = new SQLiteConnection(@" DataSource = ..\..\..\..\backend\main_db.sqlite3"))
             {
                 cn.Open();

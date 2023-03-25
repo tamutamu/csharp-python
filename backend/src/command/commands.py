@@ -1,6 +1,6 @@
 import json
 from logging import getLogger
-from time import sleep
+from threading import Event
 
 from browser.driver.chrome import ChromeDriver
 from command.base_command import BaseCmd
@@ -11,6 +11,15 @@ from socket_lib.client import LocalClient
 from util.jsonUtil import CustomJsonEncoder
 
 LOGGER = getLogger(__name__)
+
+event = Event()
+
+
+class PreLoginEndCmd(BaseCmd):
+    def main(self):
+        LOGGER.info("Finish CMD")
+        event.set()
+        return Config.Const.OK
 
 
 class PreLoginCmd(BaseCmd):
@@ -23,7 +32,11 @@ class PreLoginCmd(BaseCmd):
 
         driver = ChromeDriver("test1", is_headless=False)
         driver.get("https://login.yahoo.co.jp/config/login")
-        input("Login OK?")
+
+        LOGGER.info("Waiting until user action")
+        event.clear()
+        event.wait()
+        LOGGER.info("end...")
 
         client = LocalClient()
         client.send(Config.FRONTEND_SERVER_PORT, False)
@@ -36,12 +49,12 @@ class GetStockPriceCmd(BaseCmd):
         client = LocalClient()
         for i in range(10):
             stock_price = StockPrice()
+            stock_price.code = "test1"
             stock_price.open = i
             result = json.dumps(stock_price, cls=CustomJsonEncoder)
             brm.add(result)
             brm.commit()
             LOGGER.info(i)
             client.send(Config.FRONTEND_SERVER_PORT, False)
-            sleep(8)
 
         return "ok end"

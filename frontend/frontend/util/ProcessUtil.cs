@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using System.IO;
+using System.Management;
 using System.Text;
 
 namespace frontend.util
@@ -22,6 +23,31 @@ namespace frontend.util
 
         private StringBuilder standardOutputStringBuilder = new StringBuilder();
 
+        private static void KillProcessAndChildren(int pid)
+        {
+            // Cannot close 'system idle process'.
+            if (pid == 0)
+            {
+                return;
+            }
+            ManagementObjectSearcher searcher = new ManagementObjectSearcher
+                    ("Select * From Win32_Process Where ParentProcessID=" + pid);
+            ManagementObjectCollection moc = searcher.Get();
+            foreach (ManagementObject mo in moc)
+            {
+                KillProcessAndChildren(Convert.ToInt32(mo["ProcessID"]));
+            }
+            try
+            {
+                Process proc = Process.GetProcessById(pid);
+                proc.Kill();
+            }
+            catch (ArgumentException)
+            {
+                // Process already exited.
+            }
+        }
+
         public ProcessUtil()
         {
         }
@@ -30,8 +56,9 @@ namespace frontend.util
 #if DEBUG
             this.process.CloseMainWindow();
 #else
-            this.process.CancelOutputRead();
+            KillProcessAndChildren(this.process.Id);
             this.process.CancelErrorRead();
+            this.process.CancelOutputRead();
 #endif
             this.process.Kill();
             this.process.WaitForExit();
@@ -47,7 +74,7 @@ namespace frontend.util
             psInfo.FileName = this.FileName;
             psInfo.WorkingDirectory = this.WorkingDirectory;
             psInfo.Arguments = this.Arguments;
-            psInfo.RedirectStandardInput = true;
+            //psInfo.RedirectStandardInput = true;
 
 #if DEBUG
             psInfo.CreateNoWindow = false;

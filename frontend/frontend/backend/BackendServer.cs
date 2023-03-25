@@ -12,6 +12,7 @@ namespace frontend.backend
         public ProcessUtil processUtil;
         public DataReceivedEventHandler OupputDataReceivedEventHandler { get; set; }
         public DataReceivedEventHandler ErrorDataReceivedEventHandler { get; set; }
+        public int FrontendServerPort { get; set; }
         public EventHandler ExitEventHandler { get; set; }
         public int Port { get; private set; }
         public int ExitCode { get; set; }
@@ -20,7 +21,7 @@ namespace frontend.backend
         {
         }
 
-        public void Start(int frontendServerPort)
+        public void Start()
         {
             processUtil = new ProcessUtil();
             processUtil.OupputDataReceivedEventHandler = OupputDataReceivedEventHandler;
@@ -33,13 +34,13 @@ namespace frontend.backend
 #if DEBUG
             string variable = System.Environment.GetEnvironmentVariable("Path", System.EnvironmentVariableTarget.Process);
             processUtil.FileName = "poetry";
-            processUtil.Arguments = $@"run python src\main.py {this.Port} {frontendServerPort}";
-            processUtil.WorkingDirectory = @"../../../../backend/";
+            processUtil.Arguments = $@"run python src\main.py {this.Port} {this.FrontendServerPort}";
+            processUtil.WorkingDirectory = System.IO.Path.GetFullPath(@"../../../../backend");
 #else 
             string variable = System.Environment.GetEnvironmentVariable("Path", System.EnvironmentVariableTarget.Process);
             processUtil.FileName = "poetry";
-            processUtil.Arguments = $@"run python src\main.py {this.Port} {frontendServerPort}";
-            processUtil.WorkingDirectory = System.IO.Path.GetFullPath(@"../../../../../backend");
+            processUtil.Arguments = $@"run python src\main.py {this.Port} {this.FrontendServerPort}";
+            processUtil.WorkingDirectory = System.IO.Path.GetFullPath(@"../../../../backend");
 #endif
 
             processUtil.Execute();
@@ -59,6 +60,7 @@ namespace frontend.backend
             catch (Exception e)
             {
                 LOGGER.Debug("process has been deleted.");
+                LOGGER.Debug(e);
             }
 
             return 1;

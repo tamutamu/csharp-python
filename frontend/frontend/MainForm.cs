@@ -36,6 +36,14 @@ namespace frontend
                 FrontendServer.Start(port: FrontendServerPort, this);
             });
 
+            // Python側バックエンドサーバ起動
+            backendServer = new BackendServer();
+            backendServer.OupputDataReceivedEventHandler = BackendServerOutputDataReceived;
+            backendServer.ErrorDataReceivedEventHandler = BackendServerErrorDataReceived;
+            backendServer.ExitEventHandler = BackendServerExited;
+            backendServer.FrontendServerPort = FrontendServerPort;
+            backendServer.Start();
+
             // DataGridView初期化
             SetupDataGridView();
         }
@@ -153,18 +161,14 @@ namespace frontend
 
         async private void btnPreLogin_Click(object sender, EventArgs e)
         {
-            // Python側バックエンドサーバ起動
-            backendServer = new BackendServer();
-            backendServer.OupputDataReceivedEventHandler = BackendServerOutputDataReceived;
-            backendServer.ErrorDataReceivedEventHandler = BackendServerErrorDataReceived;
-            backendServer.ExitEventHandler = BackendServerExited;
-            var _frontport = FrontendServerPort = NetworkUtil.GetFreePort();
-            backendServer.Start(_frontport);
+            var ret = await RequestBackend(new PreLoginCmd("nao_tamura7", "u8rwb2vyfem3"));
 
-            var ret = await RequestBackend(new PreLoginCmd("nao_tamura7", "u8rwb2vyfem3", "", ""));
-
-            MessageBox.Show("ログインできました？");
-            backendServer.PressEnter();
+            await Task.Factory.StartNew(() =>
+            {
+                MessageBox.Show("ログインできました？");
+                backendServer.Request(new PreLoginEndCmd());
+            }
+            );
         }
     }
 }

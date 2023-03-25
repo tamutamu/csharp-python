@@ -15,3 +15,5 @@ class BackendResult(Base):
 
     created: datetime = Column("created", DATETIME, default=datetime.now, nullable=False)
     modified: datetime = Column("modified", DATETIME, default=datetime.now, nullable=False)
+
+    hoge: str = Column(String)

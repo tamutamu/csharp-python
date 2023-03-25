@@ -21,7 +21,8 @@ def init():
     # マスターテーブルセットアップ
     manager.setup()
 
-    Config.FRONTEND_SERVER_PORT = int(sys.argv[1])
+    Config.BACKEND_SERVER_PORT = int(sys.argv[1])
+    Config.FRONTEND_SERVER_PORT = int(sys.argv[2])
 
 
 if __name__ == "__main__":
@@ -31,7 +32,7 @@ if __name__ == "__main__":
         LOGGER.info("[Server] Start")
 
         server = Server()
-        server.start(Config.FRONTEND_SERVER_PORT, CommandProcessor())
+        server.start(Config.BACKEND_SERVER_PORT, CommandProcessor())
 
         LOGGER.info("[Server] End")
     except Exception as e:

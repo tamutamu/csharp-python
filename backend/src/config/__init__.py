@@ -1,6 +1,10 @@
 class Config:
     DB_NAME = "main_db"
+    BACKEND_SERVER_PORT = -1
     FRONTEND_SERVER_PORT = -1
+
+    class Const:
+        OK = "OK"
 
 
 # mypy: ignore-errors

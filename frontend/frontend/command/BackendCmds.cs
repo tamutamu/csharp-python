@@ -20,23 +20,21 @@
         public string Text { get; }
     }
 
-    public class ExitCmd : BackendCmd
-    {
-    }
+    public class ExitCmd : BackendCmd { }
+
+    public class GetStockPriceCmd : BackendCmd { }
 
     public class PreLoginCmd : BackendCmd
     {
-        public PreLoginCmd(string yahooUserName, string yahooUserPass, string keepaUserName, string keepaUserPass)
+        public PreLoginCmd(string yahooUserName, string yahooUserPass)
         {
             this.yahooUserName = yahooUserName;
             this.yahooUserPass = yahooUserPass;
-            this.keepaUserName = keepaUserName;
-            this.keepaUserPass = keepaUserPass;
         }
 
         public string yahooUserName { get; }
         public string yahooUserPass { get; }
-        public string keepaUserName { get; }
-        public string keepaUserPass { get; }
     }
+
+    public class PreLoginEndCmd : BackendCmd { }
 }
