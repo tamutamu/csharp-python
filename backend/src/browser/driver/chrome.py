@@ -4,6 +4,8 @@ from subprocess import CREATE_NO_WINDOW
 
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service as ChromeService
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.support.ui import WebDriverWait
 from webdriver_manager.chrome import ChromeDriverManager
 
 
@@ -88,6 +90,8 @@ class ChromeDriver(webdriver.Chrome):
             "const newProto = navigator.__proto__;delete newProto.webdriver;navigator.__proto__ = newProto;"
         )
 
+        self.timeout = 10
+
     def create_userdata(self, profile_name):
         userdata_dir = os.path.join(os.getcwd(), "Userdata", profile_name)
         os.makedirs(userdata_dir, exist_ok=True)
@@ -111,3 +115,21 @@ class ChromeDriver(webdriver.Chrome):
             bool: 存在していたらTrue
         """
         return self.session_id is not None
+
+    def send_keys(self, locator, value):
+        elem = WebDriverWait(self, self.timeout).until(IsEnabled(locator=locator))
+        elem.send_keys(value)
+
+
+class IsEnabled:
+    def __init__(self, locator=(), element=None, state=True):
+        self.locator = locator
+        self.element = element
+        self.state = state
+
+    def __call__(self, driver):
+        try:
+            ecc = EC.visibility_of_element_located(self.locator)
+            return ecc(driver)
+        except Exception as e:
+            return False

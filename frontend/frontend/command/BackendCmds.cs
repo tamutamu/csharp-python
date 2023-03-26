@@ -24,16 +24,16 @@
 
     public class GetStockPriceCmd : BackendCmd { }
 
-    public class PreLoginCmd : BackendCmd
+    public class AmazonLoginCmd : BackendCmd
     {
-        public PreLoginCmd(string yahooUserName, string yahooUserPass)
+        public AmazonLoginCmd(string amazonUserName, string amazonUserPass)
         {
-            this.yahoo_user_name = yahooUserName;
-            this.yahoo_user_pass = yahooUserPass;
+            this.amazon_user_name = amazonUserName;
+            this.amazon_user_pass = amazonUserPass;
         }
 
-        public string yahoo_user_name { get; }
-        public string yahoo_user_pass { get; }
+        public string amazon_user_name { get; }
+        public string amazon_user_pass { get; }
     }
 
     public class EventCmd : BackendCmd
