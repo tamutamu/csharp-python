@@ -38,6 +38,8 @@
             this.btnExit = new System.Windows.Forms.Button();
             this.dgvStockPrice = new System.Windows.Forms.DataGridView();
             this.btnPreLogin = new System.Windows.Forms.Button();
+            this.設定SToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.SettingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvStockPrice)).BeginInit();
             this.SuspendLayout();
@@ -79,10 +81,10 @@
             this.menuStrip1.GripMargin = new System.Windows.Forms.Padding(2, 2, 0, 2);
             this.menuStrip1.ImageScalingSize = new System.Drawing.Size(24, 24);
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripMenuItem1});
+            this.toolStripMenuItem1,
+            this.設定SToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Padding = new System.Windows.Forms.Padding(6, 2, 0, 2);
             this.menuStrip1.Size = new System.Drawing.Size(1288, 33);
             this.menuStrip1.TabIndex = 4;
             this.menuStrip1.Text = "menuStrip1";
@@ -134,6 +136,21 @@
             this.btnPreLogin.UseVisualStyleBackColor = true;
             this.btnPreLogin.Click += new System.EventHandler(this.btnPreLogin_Click);
             // 
+            // 設定SToolStripMenuItem
+            // 
+            this.設定SToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.SettingsToolStripMenuItem});
+            this.設定SToolStripMenuItem.Name = "設定SToolStripMenuItem";
+            this.設定SToolStripMenuItem.Size = new System.Drawing.Size(84, 29);
+            this.設定SToolStripMenuItem.Text = "設定(&S)";
+            // 
+            // SettingsToolStripMenuItem
+            // 
+            this.SettingsToolStripMenuItem.Name = "SettingsToolStripMenuItem";
+            this.SettingsToolStripMenuItem.Size = new System.Drawing.Size(270, 34);
+            this.SettingsToolStripMenuItem.Text = "各種設定(&C)";
+            this.SettingsToolStripMenuItem.Click += new System.EventHandler(this.SettingsToolStripMenuItem_Click);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(144F, 144F);
@@ -169,6 +186,8 @@
         private System.Windows.Forms.Button btnExit;
         private System.Windows.Forms.DataGridView dgvStockPrice;
         private System.Windows.Forms.Button btnPreLogin;
+        private System.Windows.Forms.ToolStripMenuItem 設定SToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem SettingsToolStripMenuItem;
     }
 }
 

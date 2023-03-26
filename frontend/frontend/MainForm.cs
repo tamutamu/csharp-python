@@ -4,6 +4,7 @@ using frontend.db;
 using frontend.model;
 using frontend.util;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Text.Json;
@@ -97,7 +98,7 @@ namespace frontend
             var ret = await RequestBackend(startCommand);
         }
 
-        private async Task<string> RequestBackend(BackendCmd cmd)
+        private async Task<Dictionary<string, string>> RequestBackend(BackendCmd cmd)
         {
             return await Task.Run(() =>
             {
@@ -113,7 +114,8 @@ namespace frontend
                     btnExit.Enabled = true;
                 }));
 
-                return ret;
+                var json = JsonSerializer.Deserialize<Dictionary<string, string>>(ret);
+                return json;
             });
         }
 
@@ -166,9 +168,15 @@ namespace frontend
             await Task.Factory.StartNew(() =>
             {
                 MessageBox.Show("ログインできました？");
-                backendServer.Request(new PreLoginEndCmd());
+                backendServer.Request(new EventCmd(ret["process_id"]));
             }
             );
+        }
+
+        private void SettingsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var f = new SettingForm();
+            f.ShowDialog(this);
         }
     }
 }

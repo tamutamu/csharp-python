@@ -276,6 +276,7 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="socket\SocketClient.cs" />
+    <None Include="Resources\62917openfilefolder_109270.ico" />
     <EmbeddedResource Include="setting\SettingForm.resx">
       <DependentUpon>SettingForm.cs</DependentUpon>
     </EmbeddedResource>

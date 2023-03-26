@@ -55,6 +55,9 @@ namespace frontend.util
         {
 #if DEBUG
             this.process.CloseMainWindow();
+            KillProcessAndChildren(this.process.Id);
+            this.process.CancelErrorRead();
+            this.process.CancelOutputRead();
 #else
             KillProcessAndChildren(this.process.Id);
             this.process.CancelErrorRead();

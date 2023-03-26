@@ -16,6 +16,7 @@
         "--follow-imports=silent",
         "--ignore-missing-imports",
         "--show-column-numbers",
+        "–check-untyped-defs",
         "--no-pretty"
     ],
     "python.linting.mypyCategorySeverity.note": "Error",

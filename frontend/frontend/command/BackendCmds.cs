@@ -28,13 +28,21 @@
     {
         public PreLoginCmd(string yahooUserName, string yahooUserPass)
         {
-            this.yahooUserName = yahooUserName;
-            this.yahooUserPass = yahooUserPass;
+            this.yahoo_user_name = yahooUserName;
+            this.yahoo_user_pass = yahooUserPass;
         }
 
-        public string yahooUserName { get; }
-        public string yahooUserPass { get; }
+        public string yahoo_user_name { get; }
+        public string yahoo_user_pass { get; }
     }
 
-    public class PreLoginEndCmd : BackendCmd { }
+    public class EventCmd : BackendCmd
+    {
+        public EventCmd(string processId)
+        {
+            this.process_id = processId;
+        }
+
+        public string process_id { get; }
+    }
 }

@@ -1,8 +1,8 @@
 from abc import ABCMeta, abstractmethod
 from logging import getLogger
-from threading import Thread
+from threading import Event, Thread
 
-import ulid
+from command.processor import CommandSessionManager
 
 LOGGER = getLogger(__name__)
 
@@ -27,9 +27,11 @@ class CustomThread(Thread):
 
 
 class BaseCmd(metaclass=ABCMeta):
-    def __init__(self, cmd_json, is_async: bool = True) -> None:
+    def __init__(self, cmd_json, process_id, is_async: bool = True) -> None:
         self.cmd_json = cmd_json
         self.is_async = is_async
+        self.process_id = process_id
+        self.event = Event()
 
     def before(self):
         LOGGER.info("--- START ---")
@@ -42,7 +44,6 @@ class BaseCmd(metaclass=ABCMeta):
 
     def execute(self) -> object:
         th = CustomThread(target=self.__execute, args=())
-        self.process_id = ulid.new().str
         th.daemon = True
         th.start()
 
@@ -57,4 +58,5 @@ class BaseCmd(metaclass=ABCMeta):
         raise NotImplementedError()
 
     def after(self):
+        CommandSessionManager.I().remove(self.process_id)
         LOGGER.info("--- END ---")

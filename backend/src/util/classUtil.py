@@ -1,8 +1,8 @@
 class Singleton(object):
     @classmethod
-    def get_instance(cls, input):
+    def I(cls):
         if not hasattr(cls, "_instance"):
-            cls._instance = cls(input)
+            cls._instance = cls()
         else:
-            cls._instance.input = input
+            pass
         return cls._instance
