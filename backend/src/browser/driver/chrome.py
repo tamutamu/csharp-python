@@ -117,19 +117,37 @@ class ChromeDriver(webdriver.Chrome):
         return self.session_id is not None
 
     def send_keys(self, locator, value):
-        elem = WebDriverWait(self, self.timeout).until(IsEnabled(locator=locator))
+        elem = WebDriverWait(self, self.timeout, 2).until(IsLocated(locator=locator))
         elem.send_keys(value)
+        return elem
+
+    def click(self, locator):
+        elem = WebDriverWait(self, self.timeout).until(IsClickable(locator=locator))
+        elem.click()
+        return elem
 
 
-class IsEnabled:
-    def __init__(self, locator=(), element=None, state=True):
+class IsLocated:
+    def __init__(self, locator=(), element=None):
         self.locator = locator
         self.element = element
-        self.state = state
 
     def __call__(self, driver):
         try:
             ecc = EC.visibility_of_element_located(self.locator)
+            return ecc(driver)
+        except Exception as e:
+            return False
+
+
+class IsClickable:
+    def __init__(self, locator=(), element=None):
+        self.locator = locator
+        self.element = element
+
+    def __call__(self, driver):
+        try:
+            ecc = EC.element_to_be_clickable(self.locator)
             return ecc(driver)
         except Exception as e:
             return False

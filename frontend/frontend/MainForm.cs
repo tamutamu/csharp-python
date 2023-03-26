@@ -163,7 +163,7 @@ namespace frontend
 
         async private void btnPreLogin_Click(object sender, EventArgs e)
         {
-            var ret = await RequestBackend(new AmazonLoginCmd("nao_tamura7", "u8rwb2vyfem3"));
+            var ret = await RequestBackend(new AmazonLoginCmd("x10atamutamu@gmail.com", "tamuranaoki1981"));
 
             await Task.Factory.StartNew(() =>
             {
