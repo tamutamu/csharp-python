@@ -24,17 +24,7 @@
 
     public class GetStockPriceCmd : BackendCmd { }
 
-    public class AmazonLoginCmd : BackendCmd
-    {
-        public AmazonLoginCmd(string amazonUserName, string amazonUserPass)
-        {
-            this.amazon_user_name = amazonUserName;
-            this.amazon_user_pass = amazonUserPass;
-        }
-
-        public string amazon_user_name { get; }
-        public string amazon_user_pass { get; }
-    }
+    public class AmazonLoginCmd : BackendCmd { }
 
     public class EventCmd : BackendCmd
     {

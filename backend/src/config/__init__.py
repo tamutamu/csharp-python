@@ -1,10 +1,33 @@
+import openpyxl
+
+from db.repository import SystemSettingRepository
+
+
 class Config:
     DB_NAME = "main_db"
+    PROFILE_NAME = "chrome"
     BACKEND_SERVER_PORT = -1
     FRONTEND_SERVER_PORT = -1
+    SETTING_FILE_PATH = None
 
     class Const:
         OK = "OK"
+
+    class Setting:
+        AMAZON_USER_NAME = None
+        AMAZON_USER_PASS = None
+
+
+def load_setting():
+    settings = SystemSettingRepository.dict()
+    Config.SETTING_FILE_PATH = settings["SETTING_FILE_PATH"]
+
+    wb = openpyxl.load_workbook(Config.SETTING_FILE_PATH)
+    tool_setting = wb["ツール設定"]
+    user_list = wb["ユーザ情報"]
+
+    Config.Setting.AMAZON_USER_NAME = tool_setting["B4"].value
+    Config.Setting.AMAZON_USER_PASS = tool_setting["B5"].value
 
 
 # mypy: ignore-errors

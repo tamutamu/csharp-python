@@ -13,13 +13,14 @@ namespace frontend
             this.StartPosition = FormStartPosition.CenterParent;
 
             var dbm = new DBManager();
-            var setting = dbm.Query(Setting.GetQuery("SettingFilePath"));
+            var setting = dbm.Query(SystemSetting.GetQuery("SettingFilePath"));
             txtSettingsFilePath.Text = setting.Value;
         }
 
         private void btnSelectSettingsFile_Click(object sender, System.EventArgs e)
         {
             OpenFileDialog ofd = new OpenFileDialog();
+            ofd.InitialDirectory = Environment.CurrentDirectory;
             ofd.Title = "使用する設定.xlsxを選択してください";
             ofd.Filter = "Excelファイル(*.xls;*.xlsx)|*.xls;*.xlsx";
             ofd.RestoreDirectory = true;
@@ -34,7 +35,7 @@ namespace frontend
         private void btnOk_Click(object sender, EventArgs e)
         {
             var dbm = new DBManager();
-            var setting = new Setting() { Name = "SettingFilePath", Value = txtSettingsFilePath.Text };
+            var setting = new SystemSetting() { Name = "SETTING_FILE_PATH", Value = txtSettingsFilePath.Text };
             dbm.Mutate(setting.GetMutate());
 
             this.Close();

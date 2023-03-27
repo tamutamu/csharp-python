@@ -7,8 +7,8 @@ using System.Text.Json.Serialization;
 
 namespace frontend.model
 {
-    [Table(Name = "setting")]
-    public class Setting
+    [Table(Name = "system_setting")]
+    public class SystemSetting
     {
         [Column(Name = "name", CanBeNull = false, DbType = "NVARCHAR", IsPrimaryKey = true)]
         public string Name { get; set; }
@@ -22,39 +22,39 @@ namespace frontend.model
         [Column(Name = "modified", CanBeNull = false, DbType = "DATETIME")]
         public DateTime Modified { get; set; }
 
-        static public Func<DataContext, Setting> GetQuery(string name)
+        static public Func<DataContext, SystemSetting> GetQuery(string name)
         {
-            Func<DataContext, Setting> _query = (context) =>
+            Func<DataContext, SystemSetting> _query = (context) =>
             {
-                var entity = context.GetTable<Setting>().Where(e => e.Name == name).SingleOrDefault();
+                var entity = context.GetTable<SystemSetting>().Where(e => e.Name == name).SingleOrDefault() ?? new SystemSetting();
                 return entity;
             };
             return _query;
         }
 
-        static public Func<DataContext, List<Setting>> createEntity = (context) =>
+        static public Func<DataContext, List<SystemSetting>> createEntity = (context) =>
         {
-            var list = new List<Setting>();
-            foreach (var b in context.GetTable<Setting>())
+            var list = new List<SystemSetting>();
+            foreach (var b in context.GetTable<SystemSetting>())
             {
-                list.Add(new Setting() { Name = b.Name, Value = b.Value, Created = b.Created, Modified = b.Modified });
+                list.Add(new SystemSetting() { Name = b.Name, Value = b.Value, Created = b.Created, Modified = b.Modified });
             }
             return list;
         };
 
-        public Func<DataContext, Setting> GetMutate()
+        public Func<DataContext, SystemSetting> GetMutate()
         {
-            Func<DataContext, Setting> _mutate = (context) =>
+            Func<DataContext, SystemSetting> _mutate = (context) =>
             {
-                var entity = context.GetTable<Setting>().Where(e => e.Name == this.Name).SingleOrDefault();
+                var entity = context.GetTable<SystemSetting>().Where(e => e.Name == this.Name).SingleOrDefault();
                 if (entity != null)
                 {
                     entity.Value = this.Value;
                 }
                 else
                 {
-                    var s = new Setting() { Name = this.Name, Value = this.Value };
-                    context.GetTable<Setting>().InsertOnSubmit(s);
+                    var s = new SystemSetting() { Name = this.Name, Value = this.Value };
+                    context.GetTable<SystemSetting>().InsertOnSubmit(s);
                 }
                 context.SubmitChanges();
                 return entity;

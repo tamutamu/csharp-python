@@ -3,7 +3,7 @@ import sys
 from logging import getLogger
 
 from command.processor import CommandProcessor
-from config import Config
+from config import Config, load_setting
 from db import manager
 from log.config import init_logging
 from socket_lib.server import Server
@@ -21,8 +21,12 @@ def init():
     # マスターテーブルセットアップ
     manager.setup()
 
+    # 設定オブジェクトのセットアップ
     Config.BACKEND_SERVER_PORT = int(sys.argv[1])
     Config.FRONTEND_SERVER_PORT = int(sys.argv[2])
+
+    # Settingテーブルからロード
+    load_setting()
 
 
 if __name__ == "__main__":

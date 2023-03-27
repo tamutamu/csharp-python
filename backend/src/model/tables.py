@@ -6,8 +6,8 @@ from sqlalchemy.ext.declarative import declarative_base
 Base = declarative_base()
 
 
-class Setting(Base):
-    __tablename__ = "setting"
+class SystemSetting(Base):
+    __tablename__ = "system_setting"
 
     name: str | None = Column(String, primary_key=True)
     value: str = Column(String)

@@ -14,7 +14,7 @@ namespace frontend
 
         async private void btnStart_Click(object sender, System.EventArgs e)
         {
-            var ret = ((MainForm)this.Owner).backendServer.Request(new AmazonLoginCmd("x10atamutamu@gmail.com", "tamuranaoki1981"));
+            var ret = ((MainForm)this.Owner).backendServer.Request(new AmazonLoginCmd());
 
             await Task.Factory.StartNew(() =>
             {
@@ -26,7 +26,7 @@ namespace frontend
 
         private void btnExit_Click(object sender, System.EventArgs e)
         {
-
+            this.Close();
         }
     }
 }
