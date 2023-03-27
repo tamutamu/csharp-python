@@ -6,6 +6,16 @@ from sqlalchemy.ext.declarative import declarative_base
 Base = declarative_base()
 
 
+class Setting(Base):
+    __tablename__ = "setting"
+
+    name: str | None = Column(String, primary_key=True)
+    value: str = Column(String)
+
+    created: datetime = Column("created", DATETIME, default=datetime.now, nullable=False)
+    modified: datetime = Column("modified", DATETIME, default=datetime.now, nullable=False)
+
+
 class BackendResult(Base):
     __tablename__ = "backend_result"
 
@@ -15,5 +25,3 @@ class BackendResult(Base):
 
     created: datetime = Column("created", DATETIME, default=datetime.now, nullable=False)
     modified: datetime = Column("modified", DATETIME, default=datetime.now, nullable=False)
-
-    hoge: str = Column(String)

@@ -23,10 +23,6 @@ class EventCmd(BaseCmd):
 
 
 class AmazonLoginCmd(BaseCmd):
-    """_summary_
-    Amazonに事前ログインを行う
-    """
-
     def main(self):
         brm = BackendResultManager(self.process_id)
         driver = ChromeDriver("test1", is_headless=False)
