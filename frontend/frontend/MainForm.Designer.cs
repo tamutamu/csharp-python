@@ -34,12 +34,14 @@
             this.rtbMessage = new System.Windows.Forms.RichTextBox();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.ExitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.設定SToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.PreLoginToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.SettingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.btnExit = new System.Windows.Forms.Button();
             this.dgvStockPrice = new System.Windows.Forms.DataGridView();
             this.btnPreLogin = new System.Windows.Forms.Button();
-            this.設定SToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.SettingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvStockPrice)).BeginInit();
             this.SuspendLayout();
@@ -69,10 +71,10 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.rtbMessage.BackColor = System.Drawing.SystemColors.ControlLight;
             this.rtbMessage.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.rtbMessage.Location = new System.Drawing.Point(617, 159);
+            this.rtbMessage.Location = new System.Drawing.Point(21, 148);
             this.rtbMessage.Name = "rtbMessage";
             this.rtbMessage.ReadOnly = true;
-            this.rtbMessage.Size = new System.Drawing.Size(629, 525);
+            this.rtbMessage.Size = new System.Drawing.Size(565, 615);
             this.rtbMessage.TabIndex = 3;
             this.rtbMessage.Text = "";
             // 
@@ -91,9 +93,41 @@
             // 
             // toolStripMenuItem1
             // 
+            this.toolStripMenuItem1.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.ExitToolStripMenuItem});
             this.toolStripMenuItem1.Name = "toolStripMenuItem1";
             this.toolStripMenuItem1.Size = new System.Drawing.Size(98, 29);
             this.toolStripMenuItem1.Text = "ファイル(F)";
+            // 
+            // ExitToolStripMenuItem
+            // 
+            this.ExitToolStripMenuItem.Name = "ExitToolStripMenuItem";
+            this.ExitToolStripMenuItem.Size = new System.Drawing.Size(169, 34);
+            this.ExitToolStripMenuItem.Text = "終了(&E)";
+            this.ExitToolStripMenuItem.Click += new System.EventHandler(this.ExitToolStripMenuItem_Click);
+            // 
+            // 設定SToolStripMenuItem
+            // 
+            this.設定SToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.PreLoginToolStripMenuItem,
+            this.SettingsToolStripMenuItem});
+            this.設定SToolStripMenuItem.Name = "設定SToolStripMenuItem";
+            this.設定SToolStripMenuItem.Size = new System.Drawing.Size(84, 29);
+            this.設定SToolStripMenuItem.Text = "設定(&S)";
+            // 
+            // PreLoginToolStripMenuItem
+            // 
+            this.PreLoginToolStripMenuItem.Name = "PreLoginToolStripMenuItem";
+            this.PreLoginToolStripMenuItem.Size = new System.Drawing.Size(222, 34);
+            this.PreLoginToolStripMenuItem.Text = "事前ログイン(&L)";
+            this.PreLoginToolStripMenuItem.Click += new System.EventHandler(this.PreLoginToolStripMenuItem_Click);
+            // 
+            // SettingsToolStripMenuItem
+            // 
+            this.SettingsToolStripMenuItem.Name = "SettingsToolStripMenuItem";
+            this.SettingsToolStripMenuItem.Size = new System.Drawing.Size(222, 34);
+            this.SettingsToolStripMenuItem.Text = "設定ファイル(&C)";
+            this.SettingsToolStripMenuItem.Click += new System.EventHandler(this.SettingsToolStripMenuItem_Click);
             // 
             // contextMenuStrip1
             // 
@@ -119,11 +153,11 @@
             this.dgvStockPrice.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left)));
             this.dgvStockPrice.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dgvStockPrice.Location = new System.Drawing.Point(21, 159);
+            this.dgvStockPrice.Location = new System.Drawing.Point(667, 190);
             this.dgvStockPrice.Name = "dgvStockPrice";
             this.dgvStockPrice.RowHeadersWidth = 72;
             this.dgvStockPrice.RowTemplate.Height = 30;
-            this.dgvStockPrice.Size = new System.Drawing.Size(565, 525);
+            this.dgvStockPrice.Size = new System.Drawing.Size(522, 495);
             this.dgvStockPrice.TabIndex = 7;
             // 
             // btnPreLogin
@@ -136,26 +170,11 @@
             this.btnPreLogin.UseVisualStyleBackColor = true;
             this.btnPreLogin.Click += new System.EventHandler(this.btnPreLogin_Click);
             // 
-            // 設定SToolStripMenuItem
-            // 
-            this.設定SToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.SettingsToolStripMenuItem});
-            this.設定SToolStripMenuItem.Name = "設定SToolStripMenuItem";
-            this.設定SToolStripMenuItem.Size = new System.Drawing.Size(84, 29);
-            this.設定SToolStripMenuItem.Text = "設定(&S)";
-            // 
-            // SettingsToolStripMenuItem
-            // 
-            this.SettingsToolStripMenuItem.Name = "SettingsToolStripMenuItem";
-            this.SettingsToolStripMenuItem.Size = new System.Drawing.Size(270, 34);
-            this.SettingsToolStripMenuItem.Text = "各種設定(&C)";
-            this.SettingsToolStripMenuItem.Click += new System.EventHandler(this.SettingsToolStripMenuItem_Click);
-            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(144F, 144F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.ClientSize = new System.Drawing.Size(1288, 727);
+            this.ClientSize = new System.Drawing.Size(1288, 799);
             this.Controls.Add(this.btnPreLogin);
             this.Controls.Add(this.dgvStockPrice);
             this.Controls.Add(this.btnExit);
@@ -188,6 +207,8 @@
         private System.Windows.Forms.Button btnPreLogin;
         private System.Windows.Forms.ToolStripMenuItem 設定SToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem SettingsToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem ExitToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem PreLoginToolStripMenuItem;
     }
 }
 

@@ -16,7 +16,7 @@ namespace frontend
     public partial class MainForm : Form
     {
         static NLog.Logger LOGGER = NLog.LogManager.GetCurrentClassLogger();
-        private BackendServer backendServer = null;
+        public BackendServer backendServer = null;
         private int FrontendServerPort = 0;
 
         private BindingList<StockPrice> _stockPriceList = new BindingList<StockPrice>();
@@ -75,7 +75,7 @@ namespace frontend
         public void RefreshData()
         {
             var dbm = new DBManager();
-            var dataList = dbm.QueryList();
+            var dataList = dbm.QueryList(BackendResult.createEntity);
 
             _stockPriceList.Clear();
 
@@ -114,8 +114,7 @@ namespace frontend
                     btnExit.Enabled = true;
                 }));
 
-                var json = JsonSerializer.Deserialize<Dictionary<string, string>>(ret);
-                return json;
+                return ret;
             });
         }
 
@@ -163,19 +162,31 @@ namespace frontend
 
         async private void btnPreLogin_Click(object sender, EventArgs e)
         {
-            var ret = await RequestBackend(new AmazonLoginCmd("x10atamutamu@gmail.com", "tamuranaoki1981"));
+            RefreshData();
+            //var ret = await RequestBackend(new AmazonLoginCmd("x10atamutamu@gmail.com", "tamuranaoki1981"));
 
-            await Task.Factory.StartNew(() =>
-            {
-                MessageBox.Show("ログインできました？");
-                backendServer.Request(new EventCmd(ret["process_id"]));
-            }
-            );
+            //await Task.Factory.StartNew(() =>
+            //{
+            //    MessageBox.Show("ログインできました？");
+            //    backendServer.Request(new EventCmd(ret["process_id"]));
+            //}
+            //);
         }
 
         private void SettingsToolStripMenuItem_Click(object sender, EventArgs e)
         {
             var f = new SettingForm();
+            f.ShowDialog(this);
+        }
+
+        private void ExitToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Application.Exit();
+        }
+
+        private void PreLoginToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var f = new PreLoginForm();
             f.ShowDialog(this);
         }
     }

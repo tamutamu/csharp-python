@@ -1,11 +1,13 @@
 ﻿using frontend.command;
 using frontend.util;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
+using System.Text.Json;
 
 namespace frontend.backend
 {
-    internal class BackendServer
+    public class BackendServer
     {
         static NLog.Logger LOGGER = NLog.LogManager.GetCurrentClassLogger();
 
@@ -66,11 +68,12 @@ namespace frontend.backend
             return 1;
         }
 
-        public string Request(IBackendCmd cmd)
+        public Dictionary<string, string> Request(IBackendCmd cmd)
         {
             var body = JsonUtil.ToJson(cmd);
             var ret = SocketClient.Request(body, this.Port);
-            return ret;
+            var json = JsonSerializer.Deserialize<Dictionary<string, string>>(ret);
+            return json;
         }
     }
 }

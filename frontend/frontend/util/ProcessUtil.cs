@@ -6,7 +6,7 @@ using System.Text;
 
 namespace frontend.util
 {
-    internal class ProcessUtil
+    public class ProcessUtil
     {
         public String FileName { get; set; }
         public String WorkingDirectory { get; set; }

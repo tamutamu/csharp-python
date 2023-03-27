@@ -1,4 +1,6 @@
-﻿using System;
+﻿using frontend.db;
+using frontend.model;
+using System;
 using System.Windows.Forms;
 
 namespace frontend
@@ -10,7 +12,9 @@ namespace frontend
             InitializeComponent();
             this.StartPosition = FormStartPosition.CenterParent;
 
-            // DBから設定ファイルのパスをロードする
+            var dbm = new DBManager();
+            var setting = dbm.Query(Setting.GetQuery("SettingFilePath"));
+            txtSettingsFilePath.Text = setting.Value;
         }
 
         private void btnSelectSettingsFile_Click(object sender, System.EventArgs e)
@@ -29,7 +33,10 @@ namespace frontend
 
         private void btnOk_Click(object sender, EventArgs e)
         {
-            // DBに保存、親に設定した値を返す??
+            var dbm = new DBManager();
+            var setting = new Setting() { Name = "SettingFilePath", Value = txtSettingsFilePath.Text };
+            dbm.Mutate(setting.GetMutate());
+
             this.Close();
         }
 
