@@ -10,7 +10,6 @@ namespace frontend.backend
     public class BackendServer
     {
         static NLog.Logger LOGGER = NLog.LogManager.GetCurrentClassLogger();
-
         public ProcessUtil processUtil;
         public DataReceivedEventHandler OupputDataReceivedEventHandler { get; set; }
         public DataReceivedEventHandler ErrorDataReceivedEventHandler { get; set; }
@@ -18,10 +17,6 @@ namespace frontend.backend
         public EventHandler ExitEventHandler { get; set; }
         public int Port { get; private set; }
         public int ExitCode { get; set; }
-
-        public BackendServer()
-        {
-        }
 
         public void Start()
         {
@@ -32,7 +27,6 @@ namespace frontend.backend
 
             this.Port = NetworkUtil.GetFreePort();
             LOGGER.Info($"Port = {Port}");
-
 #if DEBUG
             string variable = System.Environment.GetEnvironmentVariable("Path", System.EnvironmentVariableTarget.Process);
             processUtil.FileName = "poetry";
@@ -44,7 +38,6 @@ namespace frontend.backend
             processUtil.Arguments = $@"run python src\main.py {this.Port} {this.FrontendServerPort}";
             processUtil.WorkingDirectory = System.IO.Path.GetFullPath(@"../../../../backend");
 #endif
-
             processUtil.Execute();
         }
 
@@ -64,7 +57,6 @@ namespace frontend.backend
                 LOGGER.Debug("process has been deleted.");
                 LOGGER.Debug(e);
             }
-
             return 1;
         }
 

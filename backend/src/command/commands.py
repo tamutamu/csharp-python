@@ -24,24 +24,28 @@ class EventCmd(BaseCmd):
 
 class AmazonLoginCmd(BaseCmd):
     def main(self):
-        brm = BackendResultRepository(self.process_id)
-        driver = ChromeDriver(Config.PROFILE_NAME, is_headless=False)
+        self.driver = ChromeDriver(Config.PROFILE_NAME, is_headless=False)
 
-        driver.get(
+        self.driver.get(
             "https://www.amazon.co.jp/ap/signin?_encoding=UTF8&openid.assoc_handle=jpflex&openid.claimed_id=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0%2Fidentifier_select&openid.identity=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0%2Fidentifier_select&openid.mode=checkid_setup&openid.ns=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0&openid.ns.pape=http%3A%2F%2Fspecs.openid.net%2Fextensions%2Fpape%2F1.0&openid.pape.max_auth_age=0&openid.return_to=https%3A%2F%2Fwww.amazon.co.jp%2Fgp%2Fyourstore%2Fhome%3Fie%3DUTF8%26action%3Dsign-out%26path%3D%252Fgp%252Fyourstore%252Fhome%26ref_%3Dnav_AccountFlyout_signout%26signIn%3D1%26useRedirectOnSuccess%3D1"
         )
 
-        driver.send_keys((By.ID, "ap_email"), Config.Setting.AMAZON_USER_NAME)
-        driver.click((By.ID, "continue"))
+        self.driver.send_keys((By.ID, "ap_email"), Config.Setting.AMAZON_USER_NAME)
+        self.driver.click((By.ID, "continue"))
 
-        driver.send_keys((By.ID, "ap_password"), Config.Setting.AMAZON_USER_PASS)
-        driver.click((By.ID, "signInSubmit"))
+        self.driver.send_keys((By.ID, "ap_password"), Config.Setting.AMAZON_USER_PASS)
+        self.driver.click((By.ID, "signInSubmit"))
 
         # self.event.clear()
+        client = LocalClient()
+        client.send({"status": Config.Const.OK}, Config.FRONTEND_SERVER_PORT, False)
+
+        # Waiting user action
         self.event.wait()
-        # client = LocalClient()
-        # client.send(Config.FRONTEND_SERVER_PORT, False)
         return Config.Const.OK
+    
+    def closing(self):
+        self.driver.quit()
 
 
 class GetStockPriceCmd(BaseCmd):
@@ -56,6 +60,6 @@ class GetStockPriceCmd(BaseCmd):
             brm.add(result)
             brm.commit()
             LOGGER.info(i)
-            client.send(Config.FRONTEND_SERVER_PORT, False)
+            client.send("", Config.FRONTEND_SERVER_PORT, False)
 
         return "ok end"

@@ -27,4 +27,31 @@ root:
     - console_handler
     - file_handler
 
+loggers:
+  selenium.webdriver.remote.remote_connection:
+    level: ERROR
+    propagate: False
+    handlers:
+      - console_handler
+      - file_handler
+  urllib3.connectionpool:
+    level: ERROR
+    propagate: False
+    handlers:
+      - console_handler
+      - file_handler
+  sqlalchemy.engine:
+    propagate: False
+    level: ERROR
+    handlers:
+      - console_handler
+      - file_handler
+  alembic.runtime.migration:
+    level: ERROR
+    propagate: False
+    handlers:
+      - console_handler
+      - file_handler
+
+
 disable_existing_loggers: False

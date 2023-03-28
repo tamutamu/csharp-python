@@ -21,7 +21,7 @@ def get_session():
 
 def setup():
     global engine
-    engine = create_engine("sqlite:///main_db.sqlite3", echo=True)
+    engine = create_engine("sqlite:///main_db.sqlite3", echo=False)
     # Base.metadata.create_all(bind=engine, tables=[BackendResult.__table__])
 
     alembic_cfg = Config(os.path.join("src", "alembic.ini"))

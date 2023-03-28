@@ -6,6 +6,7 @@ from db.repository import SystemSettingRepository
 class Config:
     DB_NAME = "main_db"
     PROFILE_NAME = "chrome"
+    MAX_RETRY  = 3
     BACKEND_SERVER_PORT = -1
     FRONTEND_SERVER_PORT = -1
     SETTING_FILE_PATH = None

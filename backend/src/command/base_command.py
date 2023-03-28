@@ -1,8 +1,11 @@
 from abc import ABCMeta, abstractmethod
 from logging import getLogger
 from threading import Event, Thread
+from time import sleep
 
 from command.processor import CommandSessionManager
+from config import Config
+from util.log import error_trace
 
 LOGGER = getLogger(__name__)
 
@@ -32,13 +35,28 @@ class BaseCmd(metaclass=ABCMeta):
         self.is_async = is_async
         self.process_id = process_id
         self.event = Event()
+        self.retry = 0
 
     def before(self):
-        LOGGER.info("--- START ---")
+        LOGGER.info(f"--- START[{self.cmd_json['_CommandName']}] ---")
 
     def __execute(self) -> None:
         self.before()
-        ret = self.main()
+        ret = {}
+        while Config.MAX_RETRY > self.retry:
+            try:
+                ret = self.main()
+            except Exception as e:
+                error_trace(e)
+                self.retry += 1
+                if Config.MAX_RETRY > self.retry:
+                    LOGGER.error(f"再試行中... [{self.retry}回目]")
+                    sleep(5)
+                else:
+                    LOGGER.error("処理失敗")
+            finally:
+                self.closing()
+                
         self.after()
         return ret
 
@@ -57,6 +75,9 @@ class BaseCmd(metaclass=ABCMeta):
     def main(self) -> None:
         raise NotImplementedError()
 
+    def closing(self) -> None:
+        pass
+
     def after(self):
         CommandSessionManager.I().remove(self.process_id)
-        LOGGER.info("--- END ---")
+        LOGGER.info(f"--- END[{self.cmd_json['_CommandName']}] ---")

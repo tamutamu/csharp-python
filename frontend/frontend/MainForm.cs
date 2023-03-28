@@ -17,7 +17,8 @@ namespace frontend
     {
         static NLog.Logger LOGGER = NLog.LogManager.GetCurrentClassLogger();
         public BackendServer backendServer = null;
-        private int FrontendServerPort = 0;
+        public int frontendServerPort = 0;
+        public FrontendServer frontendServer;
 
         private BindingList<StockPrice> _stockPriceList = new BindingList<StockPrice>();
         private BindingSource source = new BindingSource();
@@ -31,10 +32,10 @@ namespace frontend
         private void Form1_Load(object sender, EventArgs e)
         {
             // C#側サーバ起動
-            FrontendServerPort = NetworkUtil.GetFreePort();
+            this.frontendServerPort = NetworkUtil.GetFreePort();
             Task.Run(() =>
             {
-                FrontendServer.Start(port: FrontendServerPort, this);
+                this.frontendServer = FrontendServer.Get(port: this.frontendServerPort);
             });
 
             // Python側バックエンドサーバ起動
@@ -42,7 +43,7 @@ namespace frontend
             backendServer.OupputDataReceivedEventHandler = BackendServerOutputDataReceived;
             backendServer.ErrorDataReceivedEventHandler = BackendServerErrorDataReceived;
             backendServer.ExitEventHandler = BackendServerExited;
-            backendServer.FrontendServerPort = FrontendServerPort;
+            backendServer.FrontendServerPort = this.frontendServerPort;
             backendServer.Start();
 
             // DataGridView初期化
@@ -160,17 +161,9 @@ namespace frontend
             backendServer?.Stop();
         }
 
-        async private void btnPreLogin_Click(object sender, EventArgs e)
+        private void btnPreLogin_Click(object sender, EventArgs e)
         {
             RefreshData();
-            //var ret = await RequestBackend(new AmazonLoginCmd("x10atamutamu@gmail.com", "tamuranaoki1981"));
-
-            //await Task.Factory.StartNew(() =>
-            //{
-            //    MessageBox.Show("ログインできました？");
-            //    backendServer.Request(new EventCmd(ret["process_id"]));
-            //}
-            //);
         }
 
         private void SettingsToolStripMenuItem_Click(object sender, EventArgs e)

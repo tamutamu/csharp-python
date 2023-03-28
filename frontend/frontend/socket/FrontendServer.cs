@@ -1,14 +1,40 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
+using System.Text.Json;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace frontend
 {
-    internal sealed class FrontendServer
+    public sealed class FrontendServer
     {
-        public static void Start(int port, MainForm mainForm)
+
+        private FrontendServer() { }
+
+        private static Dictionary<int, FrontendServer> InstanceMapping = new Dictionary<int, FrontendServer>();
+
+        public delegate void Callback(Dictionary<string, string> reqFromBackend);
+        public Callback callback;
+
+        public static FrontendServer Get(int port)
+        {
+            if (!InstanceMapping.ContainsKey(port))
+            {
+                var c1 = new FrontendServer();
+                InstanceMapping[port] = c1;
+                Task.Run(() =>
+                {
+                    c1._Start(port);
+                });
+            }
+
+            return InstanceMapping[port];
+        }
+
+        private void _Start(int port)
         {
             // serverソケットを生成する。
             using (var server = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp))
@@ -46,10 +72,12 @@ namespace frontend
 
                                     if (msg != "")
                                     {
-                                        mainForm.Invoke(new Action(() =>
-                                        {
-                                            mainForm.RefreshData();
-                                        }));
+                                        var jsonMsg = JsonSerializer.Deserialize<Dictionary<string, string>>(msg);
+                                        this.callback(jsonMsg);
+                                        //mainForm.Invoke(new Action(() =>
+                                        //{
+                                        //    mainForm.RefreshData();
+                                        //}));
                                     }
                                     // データをコンソールに出力する。
                                     //Console.WriteLine(msg);

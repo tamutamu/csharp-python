@@ -1,27 +1,47 @@
 ﻿using frontend.command;
+using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using static frontend.FrontendServer;
 
 namespace frontend
 {
     public partial class PreLoginForm : Form
     {
+        private MainForm mainForm;
+
         public PreLoginForm()
         {
             InitializeComponent();
             this.StartPosition = FormStartPosition.CenterParent;
         }
 
-        async private void btnStart_Click(object sender, System.EventArgs e)
+        private void PreLoginForm_Load(object sender, EventArgs e)
         {
-            var ret = ((MainForm)this.Owner).backendServer.Request(new AmazonLoginCmd());
+            this.mainForm = ((MainForm)this.Owner);
+        }
 
-            await Task.Factory.StartNew(() =>
+        private Callback CreateCallback()
+        {
+            return (Dictionary<string, string> r) =>
             {
-                MessageBox.Show("ログインできました？");
-                ((MainForm)this.Owner).backendServer.Request(new EventCmd(ret["process_id"]));
-            }
-            );
+                this.Invoke(new Action(async () =>
+                {
+                    await Task.Factory.StartNew(() =>
+                    {
+                        MessageBox.Show("ログインできました？");
+                        this.mainForm.backendServer.Request(new EventCmd(r["process_id"]));
+                    }
+                    );
+                }));
+            };
+        }
+
+        private void btnStart_Click(object sender, System.EventArgs e)
+        {
+            this.mainForm.frontendServer.callback += CreateCallback();
+            var ret = this.mainForm.backendServer.Request(new AmazonLoginCmd());
         }
 
         private void btnExit_Click(object sender, System.EventArgs e)

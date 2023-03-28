@@ -1,11 +1,14 @@
 import socket
+from logging import getLogger
+
+LOGGER = getLogger(__name__)
 
 
 class Client:
     def __init__(self, host) -> None:
         self.host = host
 
-    def send(self, port, doRecv=True):
+    def send(self, msg, port, doRecv=True):
         # ソケットを生成する。
         client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         # connect関数でサーバーに接続する。
@@ -14,7 +17,6 @@ class Client:
         # 10回のループでsend、receiveをする。
         for i in range(0, 1):
             # メッセージはhelloで送信
-            msg = "hello"
             # メッセージをバイナリ(byte)タイプに変換する。
             data = msg.encode()
             # メッセージのサイズを計算する。
@@ -34,7 +36,7 @@ class Client:
                 # データを受信する。
                 msg = data.decode()
                 # データをコンソールで出力する。
-                print("Received from : ", msg)
+                # LOGGER.info("Received from : ", msg)
 
         # ソケットリソースを返却する。
         client_socket.close()

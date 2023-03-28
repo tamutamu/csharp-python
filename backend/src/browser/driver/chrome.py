@@ -8,6 +8,8 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
 from webdriver_manager.chrome import ChromeDriverManager
 
+from util.log import error_trace
+
 
 class ChromeDriver(webdriver.Chrome):
     def __init__(
@@ -105,8 +107,12 @@ class ChromeDriver(webdriver.Chrome):
         """_summary_
         ドライバを終了する
         """
-        super().quit()
-        self.session_id = None
+        try:
+            super().quit()
+        except Exception as e:
+            error_trace(e)
+        finally:
+            self.session_id = None
 
     def exist(self):
         """_summary_
