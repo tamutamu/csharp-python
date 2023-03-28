@@ -270,6 +270,7 @@
   <ItemGroup>
     <Compile Include="backend\BackendServer.cs" />
     <Compile Include="command\BackendCmds.cs" />
+    <Compile Include="Const.cs" />
     <Compile Include="db\DBManager.cs" />
     <Compile Include="prelogin\PreLoginForm.cs">
       <SubType>Form</SubType>

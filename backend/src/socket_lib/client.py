@@ -1,3 +1,4 @@
+import json
 import socket
 from logging import getLogger
 
@@ -18,7 +19,7 @@ class Client:
         for i in range(0, 1):
             # メッセージはhelloで送信
             # メッセージをバイナリ(byte)タイプに変換する。
-            data = msg.encode()
+            data = json.dumps(msg).encode()
             # メッセージのサイズを計算する。
             length = len(data)
             # データサイズをlittleエンディアンタイプに変換してサーバーに送信する。

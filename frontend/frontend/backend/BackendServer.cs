@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text.Json;
 using System.Threading.Tasks;
+using static frontend.FrontendServer;
 
 namespace frontend.backend
 {
@@ -21,7 +22,7 @@ namespace frontend.backend
 
         public void Start()
         {
-            // C#側サーバ起動
+            // C#フロントエンド側サーバ起動
             var frontendServerPort = NetworkUtil.GetFreePort();
             Task.Run(() =>
             {
@@ -68,8 +69,9 @@ namespace frontend.backend
             return 1;
         }
 
-        public Dictionary<string, string> Request(IBackendCmd cmd)
+        public Dictionary<string, string> Request(IBackendCmd cmd, Callback callback)
         {
+            this.frontendServer.callback += callback;
             var body = JsonUtil.ToJson(cmd);
             var ret = SocketClient.Request(body, this.Port);
             var json = JsonSerializer.Deserialize<Dictionary<string, string>>(ret);

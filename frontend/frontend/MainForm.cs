@@ -98,7 +98,7 @@ namespace frontend
                     btnExit.Enabled = false;
                 }));
 
-                var ret = backendServer.Request(cmd);
+                var ret = backendServer.Request(cmd, null);
 
                 this.Invoke((Action)(() =>
                 {

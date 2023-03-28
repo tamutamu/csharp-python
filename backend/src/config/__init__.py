@@ -3,16 +3,26 @@ import openpyxl
 from db.repository import SystemSettingRepository
 
 
+class Const:
+    class Status:
+        PENDING = "PENDING"
+        RUNNING = "RUNNING"
+        WAITING = "WAITING"
+        EXIT = "EXIT"
+
+    class Result:
+        SUCCESS = "SUCCESS"
+        FAILED = "FAILED"
+        SYSERR = "SYSERR"
+
+
 class Config:
     DB_NAME = "main_db"
     PROFILE_NAME = "chrome"
-    MAX_RETRY  = 3
+    MAX_RETRY = 3
     BACKEND_SERVER_PORT = -1
     FRONTEND_SERVER_PORT = -1
     SETTING_FILE_PATH = None
-
-    class Const:
-        OK = "OK"
 
     class Setting:
         AMAZON_USER_NAME = None

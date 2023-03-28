@@ -1,7 +1,7 @@
 from logging import getLogger
 from typing import Dict
 
-from util.classUtil import Singleton
+from util.class_util import Singleton
 
 LOGGER = getLogger(__name__)
 

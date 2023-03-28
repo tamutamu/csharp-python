@@ -1,11 +1,10 @@
 from abc import ABCMeta, abstractmethod
 from logging import getLogger
 from threading import Event, Thread
-from time import sleep
 
 from command.processor import CommandSessionManager
 from config import Config
-from util.log import error_trace
+from util.retry_util import func_with_retry
 
 LOGGER = getLogger(__name__)
 
@@ -42,22 +41,9 @@ class BaseCmd(metaclass=ABCMeta):
 
     def __execute(self) -> None:
         self.before()
-        ret = {}
-        while Config.MAX_RETRY > self.retry:
-            try:
-                ret = self.main()
-            except Exception as e:
-                error_trace(e)
-                self.retry += 1
-                if Config.MAX_RETRY > self.retry:
-                    LOGGER.error(f"再試行中... [{self.retry}回目]")
-                    sleep(5)
-                else:
-                    LOGGER.error("処理失敗")
-            finally:
-                self.closing()
-                
+        ret = func_with_retry(self.main, Config.MAX_RETRY)
         self.after()
+
         return ret
 
     def execute(self) -> object:
@@ -74,9 +60,6 @@ class BaseCmd(metaclass=ABCMeta):
     @abstractmethod
     def main(self) -> None:
         raise NotImplementedError()
-
-    def closing(self) -> None:
-        pass
 
     def after(self):
         CommandSessionManager.I().remove(self.process_id)
