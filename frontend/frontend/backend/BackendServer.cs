@@ -35,7 +35,7 @@ namespace frontend.backend
             processUtil.ExitEventHandler = ExitEventHandler;
 
             this.Port = NetworkUtil.GetFreePort();
-            LOGGER.Info($"Port = {Port}");
+            LOGGER.Debug($"Port = {Port}");
 #if DEBUG
             string variable = System.Environment.GetEnvironmentVariable("Path", System.EnvironmentVariableTarget.Process);
             processUtil.FileName = "poetry";
@@ -44,7 +44,7 @@ namespace frontend.backend
 #else 
             string variable = System.Environment.GetEnvironmentVariable("Path", System.EnvironmentVariableTarget.Process);
             processUtil.FileName = "poetry";
-            processUtil.Arguments = $@"run python src\main.py {this.Port} {this.FrontendServerPort}";
+            processUtil.Arguments = $@"run python src\main.py {this.Port} {frontendServerPort}";
             processUtil.WorkingDirectory = System.IO.Path.GetFullPath(@"../../../../backend");
 #endif
             processUtil.Execute();
@@ -76,6 +76,11 @@ namespace frontend.backend
             var ret = SocketClient.Request(body, this.Port);
             var json = JsonSerializer.Deserialize<Dictionary<string, string>>(ret);
             return json;
+        }
+
+        public void RemoveFrontendServerCallback()
+        {
+            this.frontendServer.callback = null;
         }
     }
 }

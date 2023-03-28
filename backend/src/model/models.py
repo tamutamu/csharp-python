@@ -1,5 +1,7 @@
 from datetime import datetime
 
+from config import Const
+
 
 class StockPrice:
     code = ""
@@ -10,3 +12,9 @@ class StockPrice:
     vol = 0
     date = datetime.now
     enable = True
+
+
+class SendResponse:
+    def __init__(self, status: Const.Status, result: Const.Result):
+        self.status = status
+        self.result = result

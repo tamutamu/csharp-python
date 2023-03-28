@@ -12,7 +12,7 @@ class Server:
         pass
 
     def start(self, port, processor: CommandProcessor):
-        LOGGER.info(f"--- Start(port = {port}) ---")
+        LOGGER.debug(f"--- Start(port = {port}) ---")
 
         # ソケットを生成する。
         server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -57,7 +57,7 @@ class Server:
                 addr (_type_): _description_
         """
         # コネクションになれば接続アドレスを出力する。
-        LOGGER.info(f"Connected by {addr}")
+        LOGGER.debug(f"Connected by {addr}")
         try:
             # 接続状況でクライアントからデータ受信を待つ。
             # もし、接続が切れちゃうとexceptが発生する。

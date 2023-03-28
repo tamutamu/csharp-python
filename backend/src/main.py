@@ -1,3 +1,7 @@
+from log.config import init_logging
+
+# Logging初期化
+init_logging()
 import functools
 import sys
 from logging import getLogger
@@ -5,7 +9,6 @@ from logging import getLogger
 from command.processor import CommandProcessor
 from config import Config, load_setting
 from db import manager
-from log.config import init_logging
 from socket_lib.server import Server
 from util.log import error_trace
 
@@ -15,8 +18,6 @@ LOGGER = getLogger(__name__)
 
 
 def init():
-    # Logging初期化
-    init_logging()
 
     # マスターテーブルセットアップ
     manager.setup()

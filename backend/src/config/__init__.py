@@ -1,16 +1,17 @@
+from enum import Enum
 import openpyxl
 
 from db.repository import SystemSettingRepository
 
 
 class Const:
-    class Status:
+    class Status(str, Enum):
         PENDING = "PENDING"
         RUNNING = "RUNNING"
         WAITING = "WAITING"
         EXIT = "EXIT"
 
-    class Result:
+    class Result(str, Enum):
         SUCCESS = "SUCCESS"
         FAILED = "FAILED"
         SYSERR = "SYSERR"
@@ -19,10 +20,12 @@ class Const:
 class Config:
     DB_NAME = "main_db"
     PROFILE_NAME = "chrome"
-    MAX_RETRY = 3
     BACKEND_SERVER_PORT = -1
     FRONTEND_SERVER_PORT = -1
     SETTING_FILE_PATH = None
+
+    MAX_RETRY = 3
+    TIMEOUT = 5
 
     class Setting:
         AMAZON_USER_NAME = None

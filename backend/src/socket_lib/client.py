@@ -2,6 +2,8 @@ import json
 import socket
 from logging import getLogger
 
+from util.json_util import CustomJsonEncoder
+
 LOGGER = getLogger(__name__)
 
 
@@ -9,7 +11,7 @@ class Client:
     def __init__(self, host) -> None:
         self.host = host
 
-    def send(self, msg, port, doRecv=True):
+    def send(self, response, port, doRecv=True):
         # ソケットを生成する。
         client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         # connect関数でサーバーに接続する。
@@ -19,7 +21,7 @@ class Client:
         for i in range(0, 1):
             # メッセージはhelloで送信
             # メッセージをバイナリ(byte)タイプに変換する。
-            data = json.dumps(msg).encode()
+            data = json.dumps(response, cls=CustomJsonEncoder).encode()
             # メッセージのサイズを計算する。
             length = len(data)
             # データサイズをlittleエンディアンタイプに変換してサーバーに送信する。
@@ -35,7 +37,7 @@ class Client:
                 # データの長さを受信する。
                 data = client_socket.recv(length)
                 # データを受信する。
-                msg = data.decode()
+                response = data.decode()
                 # データをコンソールで出力する。
                 # LOGGER.info("Received from : ", msg)
 
@@ -44,5 +46,9 @@ class Client:
 
 
 class LocalClient(Client):
-    def __init__(self) -> None:
+    def __init__(self, port) -> None:
         super().__init__("127.0.0.1")
+        self.port = port
+
+    def send(self, response, doRecv=True):
+        super().send(response, self.port, doRecv)

@@ -38,6 +38,8 @@
             this.設定SToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.PreLoginToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.SettingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.HelpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.VersionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.btnExit = new System.Windows.Forms.Button();
             this.dgvStockPrice = new System.Windows.Forms.DataGridView();
@@ -71,10 +73,10 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.rtbMessage.BackColor = System.Drawing.SystemColors.ControlLight;
             this.rtbMessage.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.rtbMessage.Location = new System.Drawing.Point(21, 148);
+            this.rtbMessage.Location = new System.Drawing.Point(12, 147);
             this.rtbMessage.Name = "rtbMessage";
             this.rtbMessage.ReadOnly = true;
-            this.rtbMessage.Size = new System.Drawing.Size(565, 615);
+            this.rtbMessage.Size = new System.Drawing.Size(952, 615);
             this.rtbMessage.TabIndex = 3;
             this.rtbMessage.Text = "";
             // 
@@ -84,10 +86,11 @@
             this.menuStrip1.ImageScalingSize = new System.Drawing.Size(24, 24);
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripMenuItem1,
-            this.設定SToolStripMenuItem});
+            this.設定SToolStripMenuItem,
+            this.HelpToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(1288, 33);
+            this.menuStrip1.Size = new System.Drawing.Size(990, 33);
             this.menuStrip1.TabIndex = 4;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -129,6 +132,21 @@
             this.SettingsToolStripMenuItem.Text = "設定ファイル(&C)";
             this.SettingsToolStripMenuItem.Click += new System.EventHandler(this.SettingsToolStripMenuItem_Click);
             // 
+            // HelpToolStripMenuItem
+            // 
+            this.HelpToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.VersionToolStripMenuItem});
+            this.HelpToolStripMenuItem.Name = "HelpToolStripMenuItem";
+            this.HelpToolStripMenuItem.Size = new System.Drawing.Size(95, 29);
+            this.HelpToolStripMenuItem.Text = "ヘルプ(&H)";
+            // 
+            // VersionToolStripMenuItem
+            // 
+            this.VersionToolStripMenuItem.Name = "VersionToolStripMenuItem";
+            this.VersionToolStripMenuItem.Size = new System.Drawing.Size(270, 34);
+            this.VersionToolStripMenuItem.Text = "バージョン情報(H)";
+            this.VersionToolStripMenuItem.Click += new System.EventHandler(this.VersionToolStripMenuItem_Click);
+            // 
             // contextMenuStrip1
             // 
             this.contextMenuStrip1.ImageScalingSize = new System.Drawing.Size(24, 24);
@@ -153,11 +171,11 @@
             this.dgvStockPrice.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left)));
             this.dgvStockPrice.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dgvStockPrice.Location = new System.Drawing.Point(667, 190);
+            this.dgvStockPrice.Location = new System.Drawing.Point(506, 36);
             this.dgvStockPrice.Name = "dgvStockPrice";
             this.dgvStockPrice.RowHeadersWidth = 72;
             this.dgvStockPrice.RowTemplate.Height = 30;
-            this.dgvStockPrice.Size = new System.Drawing.Size(522, 495);
+            this.dgvStockPrice.Size = new System.Drawing.Size(458, 26);
             this.dgvStockPrice.TabIndex = 7;
             // 
             // btnPreLogin
@@ -174,7 +192,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(144F, 144F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.ClientSize = new System.Drawing.Size(1288, 799);
+            this.ClientSize = new System.Drawing.Size(990, 799);
             this.Controls.Add(this.btnPreLogin);
             this.Controls.Add(this.dgvStockPrice);
             this.Controls.Add(this.btnExit);
@@ -209,6 +227,8 @@
         private System.Windows.Forms.ToolStripMenuItem SettingsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem ExitToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem PreLoginToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem HelpToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem VersionToolStripMenuItem;
     }
 }
 

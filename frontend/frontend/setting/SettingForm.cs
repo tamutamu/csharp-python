@@ -11,10 +11,6 @@ namespace frontend
         {
             InitializeComponent();
             this.StartPosition = FormStartPosition.CenterParent;
-
-            var dbm = new DBManager();
-            var setting = dbm.Query(SystemSetting.GetQuery("SettingFilePath"));
-            txtSettingsFilePath.Text = setting.Value;
         }
 
         private void btnSelectSettingsFile_Click(object sender, System.EventArgs e)
@@ -44,6 +40,13 @@ namespace frontend
         private void btnCancel_Click(object sender, EventArgs e)
         {
             this.Close();
+        }
+
+        private void SettingForm_Load(object sender, EventArgs e)
+        {
+            var dbm = new DBManager();
+            var setting = dbm.Query(SystemSetting.GetQuery("SETTING_FILE_PATH"));
+            txtSettingsFilePath.Text = setting.Value;
         }
     }
 }

@@ -55,6 +55,11 @@ namespace frontend
             this.Close();
         }
 
+        private void PreLoginForm_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            this.mainForm.backendServer.RemoveFrontendServerCallback();
+        }
+
         //private Callback CreateCallback()
         //{
         //    return (Dictionary<string, string> r) =>

@@ -73,6 +73,7 @@
             this.Controls.Add(this.groupBox1);
             this.Name = "PreLoginForm";
             this.Text = "設定ファイル";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.PreLoginForm_FormClosing);
             this.Load += new System.EventHandler(this.PreLoginForm_Load);
             this.groupBox1.ResumeLayout(false);
             this.ResumeLayout(false);

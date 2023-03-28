@@ -24,4 +24,5 @@
     "python.analysis.diagnosticSeverityOverrides": {
         "reportShadowedImports": "none"
     },
+    "python.defaultInterpreterPath": ".venv/Scripts/python",
 }

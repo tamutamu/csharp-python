@@ -11,7 +11,7 @@ LOGGER = getLogger(__name__)
 class CommandProcessor:
     def process(self, req):
         try:
-            LOGGER.info(req)
+            LOGGER.debug(req)
             cmd = CommandCreator.create(json.loads(req))
             ret = cmd.execute()
             CommandSessionManager.I().add(cmd.process_id, cmd)

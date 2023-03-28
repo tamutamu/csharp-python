@@ -4,6 +4,7 @@ from threading import Event, Thread
 
 from command.processor import CommandSessionManager
 from config import Config
+from socket_lib.client import LocalClient
 from util.retry_util import func_with_retry
 
 LOGGER = getLogger(__name__)
@@ -35,6 +36,7 @@ class BaseCmd(metaclass=ABCMeta):
         self.process_id = process_id
         self.event = Event()
         self.retry = 0
+        self.client = LocalClient(Config.FRONTEND_SERVER_PORT)
 
     def before(self):
         LOGGER.info(f"--- START[{self.cmd_json['_CommandName']}] ---")

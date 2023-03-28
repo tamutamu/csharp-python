@@ -1,8 +1,9 @@
 version: 1
+disable_existing_loggers: True
  
 formatters:
   default:
-    format: '{asctime} {name:<8s} {levelname:8s} {message}'
+    format: '{asctime} {name:<25.25} {funcName:<10.10} {levelname:<5.5}: {message}'
     datefmt: '%Y/%m/%d %H:%M:%S'
     style: '{'
  
@@ -22,7 +23,7 @@ handlers:
     formatter: default
  
 root:
-  level: DEBUG
+  level: INFO
   handlers:
     - console_handler
     - file_handler
@@ -52,6 +53,3 @@ loggers:
     handlers:
       - console_handler
       - file_handler
-
-
-disable_existing_loggers: False

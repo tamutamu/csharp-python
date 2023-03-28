@@ -1,6 +1,7 @@
 ﻿using frontend.backend;
 using frontend.command;
 using frontend.db;
+using frontend.help;
 using frontend.model;
 using System;
 using System.Collections.Generic;
@@ -19,7 +20,6 @@ namespace frontend
         public int frontendServerPort = 0;
 
         private BindingList<StockPrice> _stockPriceList = new BindingList<StockPrice>();
-        private BindingSource source = new BindingSource();
 
         public MainForm()
         {
@@ -42,8 +42,6 @@ namespace frontend
 
         private void SetupDataGridView()
         {
-            //this.source.DataSource = _stockPriceList;
-
             dgvStockPrice.AutoGenerateColumns = false;
             dgvStockPrice.RowHeadersVisible = false;
             dgvStockPrice.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
@@ -170,6 +168,12 @@ namespace frontend
         private void PreLoginToolStripMenuItem_Click(object sender, EventArgs e)
         {
             var f = new PreLoginForm();
+            f.ShowDialog(this);
+        }
+
+        private void VersionToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var f = new VersionInfo();
             f.ShowDialog(this);
         }
     }

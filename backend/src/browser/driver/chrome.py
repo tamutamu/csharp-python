@@ -1,14 +1,19 @@
 import os
 import shutil
+from logging import getLogger
 from subprocess import CREATE_NO_WINDOW
 
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service as ChromeService
+from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
 from webdriver_manager.chrome import ChromeDriverManager
 
+from config import Config
 from util.log import error_trace
+
+LOGGER = getLogger(__name__)
 
 
 class ChromeDriver(webdriver.Chrome):
@@ -92,8 +97,6 @@ class ChromeDriver(webdriver.Chrome):
             "const newProto = navigator.__proto__;delete newProto.webdriver;navigator.__proto__ = newProto;"
         )
 
-        self.timeout = 10
-
     def create_userdata(self, profile_name):
         userdata_dir = os.path.join(os.getcwd(), "Userdata", profile_name)
         os.makedirs(userdata_dir, exist_ok=True)
@@ -122,13 +125,21 @@ class ChromeDriver(webdriver.Chrome):
         """
         return self.session_id is not None
 
-    def send_keys(self, locator, value):
-        elem = WebDriverWait(self, self.timeout, 2).until(IsLocated(locator=locator))
+    def get(self, url):
+        LOGGER.info(f"go to {url}")
+        super().get(url)
+
+    def find_xpath(self, xpath, timeout=Config.TIMEOUT):
+        elem = WebDriverWait(self, timeout, 2).until(IsLocated(locator=(By.XPATH, xpath)))
+        return elem
+
+    def send_keys(self, locator, value, timeout=Config.TIMEOUT):
+        elem = WebDriverWait(self, timeout, 2).until(IsLocated(locator=locator))
         elem.send_keys(value)
         return elem
 
-    def click(self, locator):
-        elem = WebDriverWait(self, self.timeout).until(IsClickable(locator=locator))
+    def click(self, locator, timeout=Config.TIMEOUT):
+        elem = WebDriverWait(self, timeout, 2).until(IsClickable(locator=locator))
         elem.click()
         return elem
 
