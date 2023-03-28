@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text.Json;
+using System.Threading.Tasks;
 
 namespace frontend.backend
 {
@@ -13,13 +14,20 @@ namespace frontend.backend
         public ProcessUtil processUtil;
         public DataReceivedEventHandler OupputDataReceivedEventHandler { get; set; }
         public DataReceivedEventHandler ErrorDataReceivedEventHandler { get; set; }
-        public int FrontendServerPort { get; set; }
         public EventHandler ExitEventHandler { get; set; }
         public int Port { get; private set; }
         public int ExitCode { get; set; }
+        public FrontendServer frontendServer;
 
         public void Start()
         {
+            // C#側サーバ起動
+            var frontendServerPort = NetworkUtil.GetFreePort();
+            Task.Run(() =>
+            {
+                this.frontendServer = FrontendServer.Get(port: frontendServerPort);
+            });
+
             processUtil = new ProcessUtil();
             processUtil.OupputDataReceivedEventHandler = OupputDataReceivedEventHandler;
             processUtil.ErrorDataReceivedEventHandler = ErrorDataReceivedEventHandler;
@@ -30,7 +38,7 @@ namespace frontend.backend
 #if DEBUG
             string variable = System.Environment.GetEnvironmentVariable("Path", System.EnvironmentVariableTarget.Process);
             processUtil.FileName = "poetry";
-            processUtil.Arguments = $@"run python src\main.py {this.Port} {this.FrontendServerPort}";
+            processUtil.Arguments = $@"run python src\main.py {this.Port} {frontendServerPort}";
             processUtil.WorkingDirectory = System.IO.Path.GetFullPath(@"../../../../backend");
 #else 
             string variable = System.Environment.GetEnvironmentVariable("Path", System.EnvironmentVariableTarget.Process);

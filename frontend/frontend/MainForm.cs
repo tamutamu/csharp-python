@@ -2,7 +2,6 @@
 using frontend.command;
 using frontend.db;
 using frontend.model;
-using frontend.util;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -18,7 +17,6 @@ namespace frontend
         static NLog.Logger LOGGER = NLog.LogManager.GetCurrentClassLogger();
         public BackendServer backendServer = null;
         public int frontendServerPort = 0;
-        public FrontendServer frontendServer;
 
         private BindingList<StockPrice> _stockPriceList = new BindingList<StockPrice>();
         private BindingSource source = new BindingSource();
@@ -31,19 +29,11 @@ namespace frontend
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            // C#側サーバ起動
-            this.frontendServerPort = NetworkUtil.GetFreePort();
-            Task.Run(() =>
-            {
-                this.frontendServer = FrontendServer.Get(port: this.frontendServerPort);
-            });
-
             // Python側バックエンドサーバ起動
             backendServer = new BackendServer();
             backendServer.OupputDataReceivedEventHandler = BackendServerOutputDataReceived;
             backendServer.ErrorDataReceivedEventHandler = BackendServerErrorDataReceived;
             backendServer.ExitEventHandler = BackendServerExited;
-            backendServer.FrontendServerPort = this.frontendServerPort;
             backendServer.Start();
 
             // DataGridView初期化
