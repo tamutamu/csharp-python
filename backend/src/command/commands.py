@@ -1,12 +1,13 @@
 import json
 from logging import getLogger
-
-from selenium.webdriver.common.by import By
+import pandas as pd
+import os
 
 from browser.driver.chrome import ChromeDriver
 from command import CommandSessionManager
+from browser.amazon import Amazon
 from command.base_command import BaseCmd
-from command.yahoo_cmd import YahooAuction
+from browser.yahoo import Yahoo
 from config import Config, Const
 from db.repository import BackendResultRepository
 from model.models import SendResponse, StockPrice
@@ -25,60 +26,62 @@ class EventCmd(BaseCmd):
 class AmazonLoginCmd(BaseCmd):
     def main(self):
         try:
-            self.driver = ChromeDriver(Config.PROFILE_NAME, is_headless=False)
+            self.amazon_driver = ChromeDriver(Config.AMAZON_PROFILE_NAME, is_headless=False)
 
-            self.driver.get(
-                "https://www.amazon.co.jp/ap/signin?_encoding=UTF8&openid.assoc_handle=jpflex&openid.claimed_id=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0%2Fidentifier_select&openid.identity=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0%2Fidentifier_select&openid.mode=checkid_setup&openid.ns=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0&openid.ns.pape=http%3A%2F%2Fspecs.openid.net%2Fextensions%2Fpape%2F1.0&openid.pape.max_auth_age=0&openid.return_to=https%3A%2F%2Fwww.amazon.co.jp%2Fgp%2Fyourstore%2Fhome%3Fie%3DUTF8%26action%3Dsign-out%26path%3D%252Fgp%252Fyourstore%252Fhome%26ref_%3Dnav_AccountFlyout_signout%26signIn%3D1%26useRedirectOnSuccess%3D1"
-            )
-
-            # 過去にログインしたことがある
-            if not self.driver.find_xpath('//input[@id = "ap_password"]'):
-                self.driver.send_keys((By.ID, "ap_email"), Config.Setting.AMAZON_USER_NAME)
-                self.driver.click((By.ID, "continue"))
-
-            self.driver.send_keys((By.ID, "ap_password"), Config.Setting.AMAZON_USER_PASS)
-            self.driver.click((By.ID, "signInSubmit"))
-            # self.event.clear()
+            amazon = Amazon(self.amazon_driver)
+            amazon.login(Config.Setting.AMAZON_USER_NAME, Config.Setting.AMAZON_USER_PASS)
 
             # Waiting user action
             response = SendResponse(Const.Status.WAITING, Const.Result.SUCCESS)
             response.process_id = self.process_id
             self.client.send(response, False)
+
             self.event.wait()
-            return {"status": Const.Status.EXIT, "result": Const.Result.SUCCESS}
-
         except Exception as e:
-            self.driver.quit()
             raise e
+        finally:
+            if self.amazon_driver is not None:
+                self.amazon_driver.quit()
 
 
-class YahooAuctionUpdateCmd(BaseCmd):
+class YahooAuctionSellCmd(BaseCmd):
     def main(self):
         try:
-            self.driver = ChromeDriver(Config.PROFILE_NAME, is_headless=False)
-            ya = YahooAuction(self.driver)
+            self.amazon_driver = ChromeDriver(Config.AMAZON_PROFILE_NAME, is_headless=False)
+            self.amazon_browser = Amazon(self.amazon_driver)
 
-            self.driver.get("https://login.yahoo.co.jp/config/login")
+            self.yahoo_driver = ChromeDriver(is_headless=False)
+            self.yahoo_browser = Yahoo(self.yahoo_driver)
 
-            # 過去にログインしたことがある
-            if not self.driver.find_xpath('//input[@id = "ap_password"]'):
-                self.driver.send_keys((By.ID, "ap_email"), Config.Setting.AMAZON_USER_NAME)
-                self.driver.click((By.ID, "continue"))
+            for username, password, birth in Config.Setting.USER_LIST:
+                self.sell_by_user(username, password, birth)
 
-            self.driver.send_keys((By.ID, "ap_password"), Config.Setting.AMAZON_USER_PASS)
-            self.driver.click((By.ID, "signInSubmit"))
-            # self.event.clear()
-
-            # Waiting user action
             response = SendResponse(Const.Status.WAITING, Const.Result.SUCCESS)
-            response.process_id = self.process_id
             self.client.send(response, False)
-            self.event.wait()
-            return {"status": Const.Status.EXIT, "result": Const.Result.SUCCESS}
-
         except Exception as e:
-            self.driver.quit()
             raise e
+        finally:
+            if self.amazon_driver is not None:
+                self.amazon_driver.quit()
+            if self.yahoo_driver is not None:
+                self.yahoo_driver.quit()
+
+    def sell_by_user(self, username, password, birth):
+        df_sell = pd.read_csv(
+            os.path.join("C:/Users/naoki/R/WORK/csharp-python/出品管理", f"{username}.csv"),
+            index_col=[0],
+            encoding="utf-8-sig",
+        )
+
+        for asin, item in df_sell.iterrows():
+            # Amazonデータ取得
+            product = self.amazon_browser.get_product_data(asin)
+
+            # YahooAuction出品
+            self.yahoo_browser.login(username, password)
+            self.yahoo_browser.sell(product)
+
+            self.event.wait()
 
 
 class GetStockPriceCmd(BaseCmd):

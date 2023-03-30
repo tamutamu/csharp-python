@@ -12,12 +12,12 @@ LOGGER = getLogger(__name__)
 client = LocalClient(Config.FRONTEND_SERVER_PORT)
 
 
-def func_with_retry(func, max_retry=10, await_time=5):
+def func_with_retry(bind_func, max_retry=10, await_time=5):
     retry = 0
 
     while True:
         try:
-            return func()
+            return bind_func()
         except Exception as e:
             error_trace(e)
             retry += 1
@@ -31,3 +31,11 @@ def func_with_retry(func, max_retry=10, await_time=5):
                 client.send(response, Config.FRONTEND_SERVER_PORT)
 
                 return json.dumps(response, cls=CustomJsonEncoder)
+
+
+def func_bool_if_except(bind_func):
+    try:
+        ret = bind_func()
+        return (True, ret)
+    except Exception as e:
+        return (False, e)

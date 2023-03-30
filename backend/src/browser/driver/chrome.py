@@ -1,3 +1,4 @@
+import functools
 import os
 import shutil
 from logging import getLogger
@@ -11,6 +12,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from webdriver_manager.chrome import ChromeDriverManager
 
 from config import Config
+from util.func_util import func_bool_if_except
 from util.log import error_trace
 
 LOGGER = getLogger(__name__)
@@ -135,8 +137,13 @@ class ChromeDriver(webdriver.Chrome):
 
     def send_keys(self, locator, value, timeout=Config.TIMEOUT):
         elem = WebDriverWait(self, timeout, 2).until(IsLocated(locator=locator))
+        elem.clear()
         elem.send_keys(value)
         return elem
+
+    def send_keys_if_exist(self, locator, value, timeout=Config.TIMEOUT):
+        bind_func = functools.partial(self.send_keys, locator, value, timeout)
+        return func_bool_if_except(bind_func)
 
     def click(self, locator, timeout=Config.TIMEOUT):
         elem = WebDriverWait(self, timeout, 2).until(IsClickable(locator=locator))

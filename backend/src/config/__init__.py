@@ -19,7 +19,7 @@ class Const:
 
 class Config:
     DB_NAME = "main_db"
-    PROFILE_NAME = "chrome"
+    AMAZON_PROFILE_NAME = "amazon"
     BACKEND_SERVER_PORT = -1
     FRONTEND_SERVER_PORT = -1
     SETTING_FILE_PATH = None
@@ -30,18 +30,26 @@ class Config:
     class Setting:
         AMAZON_USER_NAME = None
         AMAZON_USER_PASS = None
+        USER_LIST = []
 
 
 def load_setting():
     settings = SystemSettingRepository.dict()
     Config.SETTING_FILE_PATH = settings["SETTING_FILE_PATH"]
 
-    wb = openpyxl.load_workbook(Config.SETTING_FILE_PATH)
-    tool_setting = wb["ツール設定"]
-    user_list = wb["ユーザ情報"]
+    user_list = []
+    wb = openpyxl.load_workbook(Config.SETTING_FILE_PATH, data_only=True, read_only=True)
+    ws = wb["ツール設定"]
+    Config.Setting.AMAZON_USER_NAME = ws["B4"].value
+    Config.Setting.AMAZON_USER_PASS = ws["B5"].value
 
-    Config.Setting.AMAZON_USER_NAME = tool_setting["B4"].value
-    Config.Setting.AMAZON_USER_PASS = tool_setting["B5"].value
+    ws = wb["ユーザ情報"]
+    for row in ws.iter_rows(min_row=4):
+        if row[0].value in ("", None):
+            break
+        user_list.append([row[0].value, row[1].value, row[2].value])
+
+    Config.Setting.USER_LIST = user_list
 
 
 # mypy: ignore-errors

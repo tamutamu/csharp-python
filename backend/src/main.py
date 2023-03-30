@@ -18,7 +18,6 @@ LOGGER = getLogger(__name__)
 
 
 def init():
-
     # マスターテーブルセットアップ
     manager.setup()
 

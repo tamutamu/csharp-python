@@ -151,7 +151,24 @@ namespace frontend
 
         private void btnPreLogin_Click(object sender, EventArgs e)
         {
-            RefreshData();
+            //RefreshData();
+            var ret = this.backendServer.Request(new YahooAuctionSellCmd(), Callback);
+        }
+
+        private void Callback(Dictionary<string, string> r)
+        {
+            if (r["status"] == Const.Status.WAITING)
+            {
+                MessageBox.Show("ログインできました？");
+            }
+            else if (r["status"] == Const.Status.EXIT && r["result"] == Const.Result.SUCCESS)
+            {
+                MessageBox.Show("完了しました");
+            }
+            else if (r["status"] == Const.Status.EXIT && r["result"] == Const.Result.FAILED)
+            {
+                MessageBox.Show("処理が失敗しました");
+            }
         }
 
         private void SettingsToolStripMenuItem_Click(object sender, EventArgs e)

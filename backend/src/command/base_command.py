@@ -5,7 +5,7 @@ from threading import Event, Thread
 from command.processor import CommandSessionManager
 from config import Config
 from socket_lib.client import LocalClient
-from util.retry_util import func_with_retry
+from util.func_util import func_with_retry
 
 LOGGER = getLogger(__name__)
 

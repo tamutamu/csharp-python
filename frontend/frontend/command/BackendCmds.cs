@@ -26,6 +26,8 @@
 
     public class AmazonLoginCmd : BackendCmd { }
 
+    public class YahooAuctionSellCmd : BackendCmd { }
+
     public class EventCmd : BackendCmd
     {
         public EventCmd(string processId)

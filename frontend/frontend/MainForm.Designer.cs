@@ -177,6 +177,7 @@
             this.dgvStockPrice.RowTemplate.Height = 30;
             this.dgvStockPrice.Size = new System.Drawing.Size(458, 26);
             this.dgvStockPrice.TabIndex = 7;
+            this.dgvStockPrice.Visible = false;
             // 
             // btnPreLogin
             // 
