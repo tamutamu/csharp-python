@@ -1,16 +1,14 @@
 import json
 from logging import getLogger
-import pandas as pd
-import os
 
-from browser.driver.chrome import ChromeDriver
-from command import CommandSessionManager
 from browser.amazon import Amazon
-from command.base_command import BaseCmd
+from browser.driver.chrome import ChromeDriver
 from browser.yahoo import Yahoo
+from command import CommandSessionManager
+from command.base_command import BaseCmd
 from config import Config, Const
 from db.repository import BackendResultRepository
-from model.models import SendResponse, StockPrice
+from model.models import SellManage, SendResponse, StockPrice
 from util.json_util import CustomJsonEncoder
 
 LOGGER = getLogger(__name__)
@@ -53,8 +51,8 @@ class YahooAuctionSellCmd(BaseCmd):
             self.yahoo_driver = ChromeDriver(is_headless=False)
             self.yahoo_browser = Yahoo(self.yahoo_driver)
 
-            for username, password, birth in Config.Setting.USER_LIST:
-                self.sell_by_user(username, password, birth)
+            for user_id, password, birth in Config.Setting.USER_LIST:
+                self.sell_by_user(user_id, password, birth)
 
             response = SendResponse(Const.Status.WAITING, Const.Result.SUCCESS)
             self.client.send(response, False)
@@ -66,22 +64,16 @@ class YahooAuctionSellCmd(BaseCmd):
             if self.yahoo_driver is not None:
                 self.yahoo_driver.quit()
 
-    def sell_by_user(self, username, password, birth):
-        df_sell = pd.read_csv(
-            os.path.join("C:/Users/naoki/R/WORK/csharp-python/出品管理", f"{username}.csv"),
-            index_col=[0],
-            encoding="utf-8-sig",
-        )
-
-        for asin, item in df_sell.iterrows():
+    def sell_by_user(self, user_id, password, birth):
+        sell_manage = SellManage("C:\\Users\\tamu0\\R\WORK\\csharp-python\\出品管理", user_id)
+        for asin, item in sell_manage.df.iterrows():
             # Amazonデータ取得
             product = self.amazon_browser.get_product_data(asin)
+            self.event.wait()
 
             # YahooAuction出品
-            self.yahoo_browser.login(username, password)
+            self.yahoo_browser.login(user_id, password)
             self.yahoo_browser.sell(product)
-
-            self.event.wait()
 
 
 class GetStockPriceCmd(BaseCmd):

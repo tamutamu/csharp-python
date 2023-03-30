@@ -19,4 +19,16 @@ class Amazon:
         self.driver.click((By.ID, "signInSubmit"))
 
     def get_product_data(self, asin):
-        pass
+        self.driver.get(f"https://www.amazon.co.jp/dp/{asin}")
+
+        # 通常注文を選択
+
+        # タイトル
+
+        # 価格
+
+        # 画像
+
+        # 説明
+
+        # 在庫
