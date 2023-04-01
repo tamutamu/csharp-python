@@ -55,9 +55,9 @@ class YahooAuctionSellCmd(BaseCmd):
 
             for user_id, password, birth in Config.Setting.USER_LIST:
                 self.handle_sell(user_id, password, birth)
+                response = SendResponse(Const.Status.WAITING, Const.Result.SUCCESS)
+                self.client.send(response, False)
 
-            response = SendResponse(Const.Status.WAITING, Const.Result.SUCCESS)
-            self.client.send(response, False)
         except Exception as e:
             raise e
         finally:
@@ -67,7 +67,7 @@ class YahooAuctionSellCmd(BaseCmd):
                 self.yahoo_driver.quit()
 
     def handle_sell(self, user_id, password, birth):
-        sell_manage_by_user = SellManageByUser.I("C:\\Users\\naoki\\R\WORK\\csharp-python\\出品管理", user_id)
+        sell_manage_by_user = SellManageByUser.I("..\\出品管理", user_id)
         self.ya_browser.login(user_id, password)
 
         for asin, item in sell_manage_by_user.df.iterrows():
@@ -83,9 +83,7 @@ class YahooAuctionSellCmd(BaseCmd):
         bind_func = functools.partial(self.ya_browser.new_sell, product)
         sell_result = func_with_retry(bind_func)
 
-        import pdb
-
-        pdb.set_trace()
+        # 出品結果保存
         sell_manage_by_user.save(product)
 
 

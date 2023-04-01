@@ -1,9 +1,11 @@
 import asyncio
-from logging import getLogger
 import os
-import aiofiles
+from logging import getLogger
 
+import aiofiles
 import aiohttp
+
+from util.log_util import error_trace
 
 LOGGER = getLogger(__name__)
 
@@ -11,13 +13,18 @@ LOGGER = getLogger(__name__)
 class FileDownloader:
     @classmethod
     async def download(self, url, save_dir):
-        async with aiohttp.ClientSession() as session:
-            async with session.get(url) as resp:
-                if resp.status == 200:
-                    file_name = url.split("/")[-1]
-                    f = await aiofiles.open(os.path.join(save_dir, file_name), mode="wb")
-                    await f.write(await resp.read())
-                    await f.close()
+        try:
+            async with aiohttp.ClientSession() as session:
+                async with session.get(url) as resp:
+                    if resp.status == 200:
+                        file_name = url.split("/")[-1]
+                        f = await aiofiles.open(os.path.join(save_dir, file_name), mode="wb")
+                        await f.write(await resp.read())
+                        await f.close()
+                        return True
+        except Exception as e:
+            error_trace(e)
+            return False
 
     @classmethod
     def download_files(self, urls, save_dir):
@@ -28,8 +35,8 @@ class FileDownloader:
         asyncio.set_event_loop(loop)
         results = loop.run_until_complete(asyncio.gather(*task))
 
-        for ret in results:
-            LOGGER.info(ret)
+        if False in results:
+            raise Exception("画像ファイルのダウンロードに失敗")
 
 
 # class FileDownloader:

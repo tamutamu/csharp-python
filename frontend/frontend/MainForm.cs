@@ -157,11 +157,7 @@ namespace frontend
 
         private void Callback(Dictionary<string, string> r)
         {
-            if (r["status"] == Const.Status.WAITING)
-            {
-                MessageBox.Show("ログインできました？");
-            }
-            else if (r["status"] == Const.Status.EXIT && r["result"] == Const.Result.SUCCESS)
+            if (r["status"] == Const.Status.EXIT && r["result"] == Const.Result.SUCCESS)
             {
                 MessageBox.Show("完了しました");
             }

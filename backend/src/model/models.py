@@ -28,9 +28,9 @@ class AmazonProduct:
     stock = ""
 
     @property
-    def profit(self):
+    def profit_price(self):
         # (価格 + 固定費) × 利益率
-        return (self.price + Config.Setting.FIXED_COST) * ((Config.Setting.PROFIT_RATE + 100) / 100)
+        return int((self.price + Config.Setting.FIXED_COST) * ((Config.Setting.PROFIT_RATE + 100) / 100))
 
 
 class SendResponse:
@@ -89,7 +89,7 @@ class SellManageByUser:
             "Amazon Title": product.title,
             "Amazon Description": product.desc,
             "Amazon Price": product.price,
-            "Amazon Profit": product.profit,
+            "Amazon Profit": product.profit_price,
             "Amazon Stock": product.stock,
             "Amazon Image0": img_util(product.img_list, 0),
             "Amazon Image1": img_util(product.img_list, 1),

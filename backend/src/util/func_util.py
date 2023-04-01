@@ -28,7 +28,7 @@ def func_with_retry(func, max_retry=Config.MAX_RETRY, await_time=5):
             else:
                 LOGGER.error("処理失敗")
                 response = SendResponse(Const.Status.EXIT, Const.Result.FAILED)
-                client.send(response, Config.FRONTEND_SERVER_PORT)
+                client.send(response)
 
                 return json.dumps(response, cls=CustomJsonEncoder)
 

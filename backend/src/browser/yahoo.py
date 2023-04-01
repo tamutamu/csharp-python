@@ -1,8 +1,9 @@
-from glob import glob
-from logging import getLogger
 import os
 import shutil
+from glob import glob
+from logging import getLogger
 from time import sleep
+
 from selenium.webdriver.common.by import By
 
 from browser.driver.chrome import ChromeDriver
@@ -48,6 +49,19 @@ class YahooAuction(Yahoo):
         # 説明
         self.driver.switch_to_iframe((By.ID, "rteEditorComposition0"))
         self.driver.send_keys((By.XPATH, "//body"), product.desc)
+        self.driver.switch_to.default_content()
+
+        # 発送サイズ選ばないとエラーになる
+        self.driver.click((By.XPATH, "//div/p[text() = 'ゆうパケット']"))
+
+        # 価格
+        self.driver.send_keys((By.ID, "auc_BidOrBuyPrice_buynow"), product.profit_price)
+
+        # 確認
+        self.driver.click((By.ID, "submit_form_btn"))
+
+        # 出品
+        # self.driver.click((By.XPATH, "//button[@type='button' and @value = 'ガイドラインに同意して出品する']"))
 
     def upload_image(self, product: AmazonProduct):
         save_dir = os.path.abspath("./_images/")
