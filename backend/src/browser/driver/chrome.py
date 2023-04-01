@@ -12,15 +12,21 @@ from selenium.webdriver.support.ui import WebDriverWait
 from webdriver_manager.chrome import ChromeDriverManager
 
 from config import Config
-from util.func_util import func_bool_if_except
-from util.log import error_trace
+from util.func_util import func_bool_if_except, func_if_except
+from util.log_util import error_trace
 
 LOGGER = getLogger(__name__)
 
 
 class ChromeDriver(webdriver.Chrome):
     def __init__(
-        self, profile_name="", disable_extensions=True, is_headless=True, is_mobile=False, is_image_no_load=False
+        self,
+        profile_name="",
+        disable_extensions=True,
+        is_headless=True,
+        is_mobile=False,
+        is_image_no_load=False,
+        incognito=False,
     ):
         options = webdriver.ChromeOptions()
         # options.add_argument("start-maximized")  # https://stackoverflow.com/a/26283818/1689770
@@ -58,9 +64,12 @@ class ChromeDriver(webdriver.Chrome):
         options.add_argument(f"--user-agent={UA}")
 
         # ログイン後の保存ポップアップを非表示設定
-        options.add_experimental_option(
-            "prefs", {"credentials_enable_service": False, "profile": {"password_manager_enabled": False}}
-        )
+        options.add_experimental_option("prefs", "'credentials_enable_service': False")
+        options.add_experimental_option("prefs", "'profile.password_manager_enabled': False")
+        options.add_experimental_option("prefs", "'profile.default_content_setting_values.notifications': 2")
+
+        if incognito:
+            options.add_argument("--incognito")
 
         if profile_name != "":
             self.userdata_dir = self.create_userdata(profile_name)
@@ -131,35 +140,60 @@ class ChromeDriver(webdriver.Chrome):
         LOGGER.info(f"go to {url}")
         super().get(url)
 
-    def find_xpath(self, xpath, timeout=Config.TIMEOUT):
+    def find_xpath(self, xpath, timeout=Config.TIMEOUT_lv1):
         elem = WebDriverWait(self, timeout, 2).until(IsLocated(locator=(By.XPATH, xpath)))
         return elem
 
-    def send_keys(self, locator, value, timeout=Config.TIMEOUT):
+    def finds_xpath(self, xpath, timeout=Config.TIMEOUT_lv1):
+        WebDriverWait(self, timeout, 2).until(IsLocated(locator=(By.XPATH, xpath), is_list=True))
+        return self.find_elements(By.XPATH, xpath)
+
+    def wait_xpath(self, xpath, exist_count, timeout=Config.TIMEOUT_lv1):
+        return WebDriverWait(self, timeout, 2).until(IsLocatedCount(locator=(By.XPATH, xpath), exist_count=exist_count))
+
+    def find_xpath_if_exist(self, xpath, timeout=Config.TIMEOUT_lv1):
+        bind_func = functools.partial(self.find_xpath, xpath, timeout)
+        return func_if_except(bind_func)
+
+    def send_keys(self, locator, value, timeout=Config.TIMEOUT_lv1):
         elem = WebDriverWait(self, timeout, 2).until(IsLocated(locator=locator))
         elem.clear()
         elem.send_keys(value)
         return elem
 
-    def send_keys_if_exist(self, locator, value, timeout=Config.TIMEOUT):
+    def send_keys_if_exist(self, locator, value, timeout=Config.TIMEOUT_lv1):
         bind_func = functools.partial(self.send_keys, locator, value, timeout)
         return func_bool_if_except(bind_func)
 
-    def click(self, locator, timeout=Config.TIMEOUT):
+    def click(self, locator, timeout=Config.TIMEOUT_lv1):
         elem = WebDriverWait(self, timeout, 2).until(IsClickable(locator=locator))
         elem.click()
         return elem
 
+    def switch_to_iframe(self, locator, timeout=Config.TIMEOUT_lv1):
+        WebDriverWait(self, timeout).until(EC.frame_to_be_available_and_switch_to_it(locator))
+
+    def click_if_exist(self, locator, timeout=Config.TIMEOUT_lv1):
+        bind_func = functools.partial(self.click, locator, timeout)
+        return func_bool_if_except(bind_func)
+
 
 class IsLocated:
-    def __init__(self, locator=(), element=None):
+    def __init__(self, locator=(), is_list=False):
         self.locator = locator
-        self.element = element
+        self.is_list = is_list
 
-    def __call__(self, driver):
+    def __call__(self, driver: ChromeDriver):
         try:
-            ecc = EC.visibility_of_element_located(self.locator)
-            return ecc(driver)
+            if self.is_list:
+                ret = driver.find_elements(*self.locator)
+                if len(ret) == 1:
+                    return ret[0]
+                else:
+                    return ret
+            else:
+                ecc = EC.visibility_of_element_located(self.locator)
+                return ecc(driver)
         except Exception as e:
             return False
 
@@ -173,5 +207,21 @@ class IsClickable:
         try:
             ecc = EC.element_to_be_clickable(self.locator)
             return ecc(driver)
+        except Exception as e:
+            return False
+
+
+class IsLocatedCount:
+    def __init__(self, locator=(), exist_count=1):
+        self.locator = locator
+        self.exist_count = exist_count
+
+    def __call__(self, driver: ChromeDriver):
+        try:
+            ret = driver.find_elements(*self.locator)
+            if len(ret) == self.exist_count:
+                return ret
+            else:
+                return False
         except Exception as e:
             return False

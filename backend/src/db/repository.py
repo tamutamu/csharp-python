@@ -1,6 +1,6 @@
 from db.manager import get_session
 from model.tables import BackendResult, SystemSetting
-from util.log import error_trace
+from util.log_util import error_trace
 
 
 class BackendResultRepository:

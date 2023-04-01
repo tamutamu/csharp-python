@@ -15,6 +15,7 @@ class Client:
         # ソケットを生成する。
         client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         # connect関数でサーバーに接続する。
+        LOGGER.info(f"port = {port}")
         client_socket.connect((self.host, port))
 
         # 10回のループでsend、receiveをする。

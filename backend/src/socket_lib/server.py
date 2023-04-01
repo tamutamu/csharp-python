@@ -2,7 +2,7 @@ import socket
 from logging import getLogger
 
 from command.processor import CommandProcessor
-from util.log import error_trace
+from util.log_util import error_trace
 
 LOGGER = getLogger(__name__)
 

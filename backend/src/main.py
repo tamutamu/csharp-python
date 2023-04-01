@@ -10,7 +10,7 @@ from command.processor import CommandProcessor
 from config import Config, load_setting
 from db import manager
 from socket_lib.server import Server
-from util.log import error_trace
+from util.log_util import error_trace
 
 # https://qiita.com/HidKamiya/items/9e941a5389ba5eb79df1
 print = functools.partial(print, flush=True)

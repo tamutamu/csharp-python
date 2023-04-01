@@ -25,11 +25,14 @@ class Config:
     SETTING_FILE_PATH = None
 
     MAX_RETRY = 3
-    TIMEOUT = 5
+    TIMEOUT_lv1 = 5
+    TIMEOUT_lv2 = 3
 
     class Setting:
         AMAZON_USER_NAME = None
         AMAZON_USER_PASS = None
+        PROFIT_RATE = 0
+        FIXED_COST = 0
         USER_LIST = []
 
 
@@ -42,6 +45,8 @@ def load_setting():
     ws = wb["ツール設定"]
     Config.Setting.AMAZON_USER_NAME = ws["B4"].value
     Config.Setting.AMAZON_USER_PASS = ws["B5"].value
+    Config.Setting.PROFIT_RATE = int(ws["B6"].value)
+    Config.Setting.FIXED_COST = int(ws["B7"].value)
 
     ws = wb["ユーザ情報"]
     for row in ws.iter_rows(min_row=4):

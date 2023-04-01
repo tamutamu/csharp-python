@@ -3,7 +3,7 @@ from logging import getLogger
 
 from command import CommandSessionManager
 from command.creator import CommandCreator
-from util.log import error_trace
+from util.log_util import error_trace
 
 LOGGER = getLogger(__name__)
 

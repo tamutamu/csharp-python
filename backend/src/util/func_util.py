@@ -6,18 +6,18 @@ from config import Config, Const
 from model.models import SendResponse
 from socket_lib.client import LocalClient
 from util.json_util import CustomJsonEncoder
-from util.log import error_trace
+from util.log_util import error_trace
 
 LOGGER = getLogger(__name__)
 client = LocalClient(Config.FRONTEND_SERVER_PORT)
 
 
-def func_with_retry(bind_func, max_retry=10, await_time=5):
+def func_with_retry(func, max_retry=Config.MAX_RETRY, await_time=5):
     retry = 0
 
     while True:
         try:
-            return bind_func()
+            return func()
         except Exception as e:
             error_trace(e)
             retry += 1
@@ -31,6 +31,13 @@ def func_with_retry(bind_func, max_retry=10, await_time=5):
                 client.send(response, Config.FRONTEND_SERVER_PORT)
 
                 return json.dumps(response, cls=CustomJsonEncoder)
+
+
+def func_if_except(bind_func):
+    try:
+        return bind_func()
+    except Exception as e:
+        return None
 
 
 def func_bool_if_except(bind_func):

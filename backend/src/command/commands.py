@@ -1,14 +1,16 @@
+import functools
 import json
 from logging import getLogger
 
 from browser.amazon import Amazon
 from browser.driver.chrome import ChromeDriver
-from browser.yahoo import Yahoo
+from browser.yahoo import YahooAuction
 from command import CommandSessionManager
 from command.base_command import BaseCmd
 from config import Config, Const
 from db.repository import BackendResultRepository
-from model.models import SellManage, SendResponse, StockPrice
+from model.models import SellManageByUser, SendResponse, StockPrice
+from util.func_util import func_with_retry
 from util.json_util import CustomJsonEncoder
 
 LOGGER = getLogger(__name__)
@@ -48,11 +50,11 @@ class YahooAuctionSellCmd(BaseCmd):
             self.amazon_driver = ChromeDriver(Config.AMAZON_PROFILE_NAME, is_headless=False)
             self.amazon_browser = Amazon(self.amazon_driver)
 
-            self.yahoo_driver = ChromeDriver(is_headless=False)
-            self.yahoo_browser = Yahoo(self.yahoo_driver)
+            self.yahoo_driver = ChromeDriver(is_headless=False, incognito=True)
+            self.ya_browser = YahooAuction(self.yahoo_driver)
 
             for user_id, password, birth in Config.Setting.USER_LIST:
-                self.sell_by_user(user_id, password, birth)
+                self.handle_sell(user_id, password, birth)
 
             response = SendResponse(Const.Status.WAITING, Const.Result.SUCCESS)
             self.client.send(response, False)
@@ -64,16 +66,27 @@ class YahooAuctionSellCmd(BaseCmd):
             if self.yahoo_driver is not None:
                 self.yahoo_driver.quit()
 
-    def sell_by_user(self, user_id, password, birth):
-        sell_manage = SellManage("C:\\Users\\tamu0\\R\WORK\\csharp-python\\出品管理", user_id)
-        for asin, item in sell_manage.df.iterrows():
-            # Amazonデータ取得
-            product = self.amazon_browser.get_product_data(asin)
-            self.event.wait()
+    def handle_sell(self, user_id, password, birth):
+        sell_manage_by_user = SellManageByUser.I("C:\\Users\\naoki\\R\WORK\\csharp-python\\出品管理", user_id)
+        self.ya_browser.login(user_id, password)
 
-            # YahooAuction出品
-            self.yahoo_browser.login(user_id, password)
-            self.yahoo_browser.sell(product)
+        for asin, item in sell_manage_by_user.df.iterrows():
+            self.sell_by_user(asin, sell_manage_by_user)
+
+    def sell_by_user(self, asin, sell_manage_by_user: SellManageByUser):
+        # Amazonデータ取得
+        bind_func = functools.partial(self.amazon_browser.get_product_data, asin)
+        product = func_with_retry(bind_func)
+
+        # YahooAuction出品
+        # self.event.wait()
+        bind_func = functools.partial(self.ya_browser.new_sell, product)
+        sell_result = func_with_retry(bind_func)
+
+        import pdb
+
+        pdb.set_trace()
+        sell_manage_by_user.save(product)
 
 
 class GetStockPriceCmd(BaseCmd):

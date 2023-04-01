@@ -1,8 +1,13 @@
 from selenium.webdriver.common.by import By
 
+from browser.driver.chrome import ChromeDriver
+from config import Config
+from model.models import AmazonProduct
+from util import normalize_money
+
 
 class Amazon:
-    def __init__(self, driver):
+    def __init__(self, driver: ChromeDriver):
         self.driver = driver
 
     def login(self, username, password):
@@ -18,17 +23,39 @@ class Amazon:
         self.driver.send_keys((By.ID, "ap_password"), password)
         self.driver.click((By.ID, "signInSubmit"))
 
-    def get_product_data(self, asin):
+    def get_product_data(self, asin) -> AmazonProduct:
         self.driver.get(f"https://www.amazon.co.jp/dp/{asin}")
+        product = AmazonProduct(asin)
 
         # 通常注文を選択
+        is_click = self.driver.click_if_exist(
+            "//div[@id = 'newAccordionCaption_feature_div']", timeout=Config.TIMEOUT_lv2
+        )
+        if is_click:
+            elem_for_wait = self.driver.find_xpath_if_exist("//input[@id = 'add-to-cart-button']")
+            if not elem_for_wait:
+                raise Exception("通常の注文を選択できませんでした")
 
         # タイトル
+        product.title = self.driver.find_xpath("//span[@id='productTitle']").text
 
         # 価格
+        price_text = self.driver.find_xpath("//div[@id='corePrice_feature_div']").text
+        product.price = normalize_money(price_text)
 
         # 画像
+        img_thumb_list = self.driver.finds_xpath("//*[@id='altImages']/ul/li[contains(@class,'imageThumbnail')]")
+        for img_thumb in img_thumb_list:
+            img_thumb.click()
+
+        product.img_list = [
+            e.get_attribute("src") for e in self.driver.finds_xpath("//div[@id='main-image-container']/ul/li/*//img")
+        ]
 
         # 説明
+        product.desc = self.driver.find_xpath("//div[@id='feature-bullets']").text
 
         # 在庫
+        product.stock = self.driver.find_xpath("//div[@id='availability']/span[1]").text
+
+        return product
