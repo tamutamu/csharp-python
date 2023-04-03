@@ -12,9 +12,14 @@ class CommandProcessor:
     def process(self, req):
         try:
             LOGGER.debug(req)
+
+            # コマンド生成、プロセスIDを生成・セット
             cmd = CommandCreator.create(json.loads(req))
             ret = cmd.execute()
+
+            # waitをEventで解除する時など、どのコマンドセッションに実行するかをプロセスIDで管理
             CommandSessionManager.I().add(cmd.process_id, cmd)
+
             return json.dumps(ret, ensure_ascii=False, indent=2)
         except Exception as e:
             error_trace(e)

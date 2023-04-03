@@ -7,7 +7,7 @@ from time import sleep
 from selenium.webdriver.common.by import By
 
 from browser.driver.chrome import ChromeDriver
-from model.models import AmazonProduct
+from model.models import AmazonProduct, SellRow
 from util.request_util import FileDownloader
 
 LOGGER = getLogger(__name__)
@@ -62,6 +62,8 @@ class YahooAuction(Yahoo):
 
         # 出品
         # self.driver.click((By.XPATH, "//button[@type='button' and @value = 'ガイドラインに同意して出品する']"))
+
+        return SellRow()
 
     def upload_image(self, product: AmazonProduct):
         save_dir = os.path.abspath("./_images/")

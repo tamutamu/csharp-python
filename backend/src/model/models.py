@@ -33,10 +33,22 @@ class AmazonProduct:
         return int((self.price + Config.Setting.FIXED_COST) * ((Config.Setting.PROFIT_RATE + 100) / 100))
 
 
+class SellRow:
+    def __init__(self, asin, amazon_product: AmazonProduct):
+        self.asin = asin
+        self.amazon_product = amazon_product
+
+    action = ""
+    status = 0
+    sell_url = ""
+    error_detail = ""
+
+
 class SendResponse:
-    def __init__(self, status: Const.Status, result: Const.Result):
+    def __init__(self, status: Const.Status, result: Const.Result, detail: str = ""):
         self.status = status
         self.result = result
+        self.detail = detail
 
 
 class SellManageByUser:
@@ -72,12 +84,15 @@ class SellManageByUser:
 
         self.df = df
 
-    def save(self, product: AmazonProduct):
+    def save(self, sell_row: SellRow):
         update_data = self.gen_serise_from_amazon_product(product)
         self.df.loc[product.asin] = update_data
         self.df.to_csv(os.path.join(self.path, f"{self.user_id}.csv"), encoding="utf-8-sig", index=[0])
 
-    def gen_serise_from_amazon_product(self, product: AmazonProduct):
+    def load(self, asin) -> SellRow:
+        return SellRow()
+
+    def gen_serise_from_amazon_product(self, product: AmazonProduct, sell_result):
         img_util = lambda i, n: i[n] if len(i) >= n + 1 else ""
 
         dict_data = {

@@ -163,7 +163,7 @@ namespace frontend
             }
             else if (r["status"] == Const.Status.EXIT && r["result"] == Const.Result.FAILED)
             {
-                MessageBox.Show("処理が失敗しました");
+                MessageBox.Show("処理が失敗しました: " + r["detail"]);
             }
         }
 

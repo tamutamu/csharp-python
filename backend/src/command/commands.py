@@ -71,20 +71,26 @@ class YahooAuctionSellCmd(BaseCmd):
         self.ya_browser.login(user_id, password)
 
         for asin, item in sell_manage_by_user.df.iterrows():
-            self.sell_by_user(asin, sell_manage_by_user)
+            sell_row = self.new_sell_by_user(asin, sell_manage_by_user)
+            sell_manage_by_user.save(sell_row)
 
-    def sell_by_user(self, asin, sell_manage_by_user: SellManageByUser):
+    def new_sell_by_user(self, asin, sell_manage_by_user: SellManageByUser):
         # Amazonデータ取得
         bind_func = functools.partial(self.amazon_browser.get_product_data, asin)
-        product = func_with_retry(bind_func)
+        product = func_with_retry(bind_func, do_client_response=False)
 
         # YahooAuction出品
         # self.event.wait()
         bind_func = functools.partial(self.ya_browser.new_sell, product)
-        sell_result = func_with_retry(bind_func)
+        sell_row = func_with_retry(bind_func, do_client_response=False)
 
-        # 出品結果保存
-        sell_manage_by_user.save(product)
+        return sell_row
+
+    def update_sell_by_user(self, asin, sell_manage_by_user: SellManageByUser):
+        pass
+
+    def delete_sell_by_user(self, asin, sell_manage_by_user: SellManageByUser):
+        pass
 
 
 class GetStockPriceCmd(BaseCmd):

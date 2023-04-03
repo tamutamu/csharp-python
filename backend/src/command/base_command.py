@@ -3,7 +3,8 @@ from logging import getLogger
 from threading import Event, Thread
 
 from command.processor import CommandSessionManager
-from config import Config
+from config import Config, Const
+from model.models import SendResponse
 from socket_lib.client import LocalClient
 from util.func_util import func_with_retry
 
@@ -43,7 +44,15 @@ class BaseCmd(metaclass=ABCMeta):
 
     def __execute(self) -> None:
         self.before()
-        ret = func_with_retry(self.main, Config.MAX_RETRY)
+
+        try:
+            ret = func_with_retry(self.main, Config.MAX_RETRY)
+            res = SendResponse(Const.Status.EXIT, Const.Result.SUCCESS, str(e))
+        except Exception as e:
+            res = SendResponse(Const.Status.EXIT, Const.Result.FAILED, str(e))
+        finally:
+            self.client.send(res)
+
         self.after()
 
         return ret

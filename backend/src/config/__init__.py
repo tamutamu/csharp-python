@@ -24,7 +24,7 @@ class Config:
     FRONTEND_SERVER_PORT = -1
     SETTING_FILE_PATH = None
 
-    MAX_RETRY = 3
+    MAX_RETRY = 2
     TIMEOUT_lv1 = 5
     TIMEOUT_lv2 = 3
 
