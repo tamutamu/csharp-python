@@ -33,17 +33,6 @@ class AmazonProduct:
         return int((self.price + Config.Setting.FIXED_COST) * ((Config.Setting.PROFIT_RATE + 100) / 100))
 
 
-class SellRow:
-    def __init__(self, asin, amazon_product: AmazonProduct):
-        self.asin = asin
-        self.amazon_product = amazon_product
-
-    action = ""
-    status = 0
-    sell_url = ""
-    error_detail = ""
-
-
 class SendResponse:
     def __init__(self, status: Const.Status, result: Const.Result, detail: str = ""):
         self.status = status
@@ -51,7 +40,18 @@ class SendResponse:
         self.detail = detail
 
 
-class SellManageByUser:
+class SellRow:
+    def __init__(self, product: AmazonProduct):
+        self.asin = product.asin
+        self.product = product
+
+    action = ""
+    status = ""
+    sell_url = ""
+    error_detail = ""
+
+
+class SellDataByUser:
     __create_key = object()
     _instance_map = dict()
 
@@ -66,7 +66,7 @@ class SellManageByUser:
 
     def __init__(self, create_key, path, user_id):
         assert (
-            create_key == SellManageByUser.__create_key
+            create_key == SellDataByUser.__create_key
         ), "OnlyCreatable objects must be created using OnlyCreatable.create"
 
         self.path = path
@@ -84,28 +84,43 @@ class SellManageByUser:
 
         self.df = df
 
-    def save(self, sell_row: SellRow):
+    def save(self, product: AmazonProduct):
         update_data = self.gen_serise_from_amazon_product(product)
         self.df.loc[product.asin] = update_data
+
+    def save_row(self, sell_row: SellRow):
+        update_data = self.gen_serise_from_amazon_product(sell_row.product)
+        self.df.loc[sell_row.product.asin] = update_data
         self.df.to_csv(os.path.join(self.path, f"{self.user_id}.csv"), encoding="utf-8-sig", index=[0])
 
     def load(self, asin) -> SellRow:
         return SellRow()
 
-    def gen_serise_from_amazon_product(self, product: AmazonProduct, sell_result):
+    def get(self, asin) -> SellRow:
+        row = self.df.loc[asin]
+
+        for col in row.columns:
+            print(col)
+
+        return SellRow()
+
+    def gen_serise_from_amazon_product(self, sell_row: SellRow):
         img_util = lambda i, n: i[n] if len(i) >= n + 1 else ""
+        product = sell_row.product
+
+        default_mapper = lambda index, row, field, model: model.setattr(field, row[index])
 
         dict_data = {
-            "ASIN": product.asin,
-            "ツールアクション": "",
-            "ステータス": "",
-            "出品URL": "",
-            "エラー詳細": "",
-            "Amazon Title": product.title,
-            "Amazon Description": product.desc,
-            "Amazon Price": product.price,
-            "Amazon Profit": product.profit_price,
-            "Amazon Stock": product.stock,
+            "ASIN": {"field": "asin", "mapper": default_mapper},
+            "ツールアクション": {"field": "ツールアクション", "mapper": default_mapper},
+            "ステータス": {"status": default_mapper},
+            "出品URL": {"sell_url": default_mapper},
+            "エラー詳細": {"error_detail": default_mapper},
+            "Amazon Title": {"title": default_mapper},
+            "Amazon Description": {"desc": default_mapper},
+            "Amazon Price": {"price": default_mapper},
+            "Amazon Profit": {"profit_price": default_mapper},
+            "Amazon Stock": {"stock": default_mapper},
             "Amazon Image0": img_util(product.img_list, 0),
             "Amazon Image1": img_util(product.img_list, 1),
             "Amazon Image2": img_util(product.img_list, 2),
@@ -119,3 +134,9 @@ class SellManageByUser:
         }
 
         return pd.Series(dict_data)
+
+
+class SendResponse:
+    def __init__(self, status: Const.Status, result: Const.Result):
+        self.status = status
+        self.result = result

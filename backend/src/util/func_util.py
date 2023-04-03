@@ -7,7 +7,7 @@ from util.log_util import error_trace
 LOGGER = getLogger(__name__)
 
 
-def func_with_retry(func, max_retry=Config.MAX_RETRY, await_time=5, do_client_response=True):
+def func_with_retry(func, max_retry=Config.MAX_RETRY, await_time=5):
     retry = 0
 
     while True:

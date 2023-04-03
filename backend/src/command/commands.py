@@ -9,7 +9,7 @@ from command import CommandSessionManager
 from command.base_command import BaseCmd
 from config import Config, Const
 from db.repository import BackendResultRepository
-from model.models import SellManageByUser, SendResponse, StockPrice
+from model.models import SellDataByUser, SendResponse, StockPrice
 from util.func_util import func_with_retry
 from util.json_util import CustomJsonEncoder
 
@@ -67,29 +67,30 @@ class YahooAuctionSellCmd(BaseCmd):
                 self.yahoo_driver.quit()
 
     def handle_sell(self, user_id, password, birth):
-        sell_manage_by_user = SellManageByUser.I("..\\出品管理", user_id)
+        sell_manage_by_user = SellDataByUser.I("..\\出品管理", user_id)
         self.ya_browser.login(user_id, password)
 
         for asin, item in sell_manage_by_user.df.iterrows():
-            sell_row = self.new_sell_by_user(asin, sell_manage_by_user)
+            sell_row = self.sell_by_user(asin, sell_manage_by_user)
             sell_manage_by_user.save(sell_row)
 
-    def new_sell_by_user(self, asin, sell_manage_by_user: SellManageByUser):
+    def sell_by_user(self, asin, sell_manage_by_user: SellDataByUser):
         # Amazonデータ取得
         bind_func = functools.partial(self.amazon_browser.get_product_data, asin)
-        product = func_with_retry(bind_func, do_client_response=False)
+        product = func_with_retry(bind_func)
 
         # YahooAuction出品
         # self.event.wait()
         bind_func = functools.partial(self.ya_browser.new_sell, product)
-        sell_row = func_with_retry(bind_func, do_client_response=False)
+
+        sell_row = func_with_retry(bind_func)
 
         return sell_row
 
-    def update_sell_by_user(self, asin, sell_manage_by_user: SellManageByUser):
+    def update_sell_by_user(self, asin, sell_manage_by_user: SellDataByUser):
         pass
 
-    def delete_sell_by_user(self, asin, sell_manage_by_user: SellManageByUser):
+    def delete_sell_by_user(self, asin, sell_manage_by_user: SellDataByUser):
         pass
 
 

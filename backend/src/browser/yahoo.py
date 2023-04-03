@@ -63,7 +63,7 @@ class YahooAuction(Yahoo):
         # 出品
         # self.driver.click((By.XPATH, "//button[@type='button' and @value = 'ガイドラインに同意して出品する']"))
 
-        return SellRow()
+        return SellRow(product)
 
     def upload_image(self, product: AmazonProduct):
         save_dir = os.path.abspath("./_images/")
