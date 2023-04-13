@@ -43,15 +43,17 @@ class SendResponse:
 class SellRow:
     def __init__(self, product: AmazonProduct):
         self.asin = product.asin
+
+        self.action = ""
+        self.status = ""
+        self.sell_url = ""
+        self.error_detail = ""
+
+        # Amazonデータ
         self.product = product
 
-    action = ""
-    status = ""
-    sell_url = ""
-    error_detail = ""
 
-
-class SellDataByUser:
+class SellOfUser:
     __create_key = object()
     _instance_map = dict()
 
@@ -65,9 +67,7 @@ class SellDataByUser:
         return cls._instance_map[key]
 
     def __init__(self, create_key, path, user_id):
-        assert (
-            create_key == SellDataByUser.__create_key
-        ), "OnlyCreatable objects must be created using OnlyCreatable.create"
+        assert create_key == SellOfUser.__create_key, "OnlyCreatable objects must be created using OnlyCreatable.create"
 
         self.path = path
         self.user_id = user_id
@@ -76,7 +76,7 @@ class SellDataByUser:
             os.path.join(path, f"{user_id}.csv"),
             index_col=[0],
             encoding="utf-8-sig",
-        )
+        ).fillna("")
 
         dup_df = df[df.index.duplicated()]
         if len(dup_df) > 0:
@@ -84,17 +84,10 @@ class SellDataByUser:
 
         self.df = df
 
-    def save(self, product: AmazonProduct):
-        update_data = self.gen_serise_from_amazon_product(product)
-        self.df.loc[product.asin] = update_data
-
-    def save_row(self, sell_row: SellRow):
+    def update_row(self, sell_row: SellRow):
         update_data = self.gen_serise_from_amazon_product(sell_row.product)
         self.df.loc[sell_row.product.asin] = update_data
         self.df.to_csv(os.path.join(self.path, f"{self.user_id}.csv"), encoding="utf-8-sig", index=[0])
-
-    def load(self, asin) -> SellRow:
-        return SellRow()
 
     def get(self, asin) -> SellRow:
         row = self.df.loc[asin]
@@ -134,9 +127,3 @@ class SellDataByUser:
         }
 
         return pd.Series(dict_data)
-
-
-class SendResponse:
-    def __init__(self, status: Const.Status, result: Const.Result):
-        self.status = status
-        self.result = result

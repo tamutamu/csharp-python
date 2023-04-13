@@ -9,7 +9,7 @@ from command import CommandSessionManager
 from command.base_command import BaseCmd
 from config import Config, Const
 from db.repository import BackendResultRepository
-from model.models import SellDataByUser, SendResponse, StockPrice
+from model.models import SellOfUser, SendResponse, StockPrice
 from util.func_util import func_with_retry
 from util.json_util import CustomJsonEncoder
 
@@ -54,7 +54,7 @@ class YahooAuctionSellCmd(BaseCmd):
             self.ya_browser = YahooAuction(self.yahoo_driver)
 
             for user_id, password, birth in Config.Setting.USER_LIST:
-                self.handle_sell(user_id, password, birth)
+                self.sell(user_id, password, birth)
                 response = SendResponse(Const.Status.WAITING, Const.Result.SUCCESS)
                 self.client.send(response, False)
 
@@ -66,31 +66,32 @@ class YahooAuctionSellCmd(BaseCmd):
             if self.yahoo_driver is not None:
                 self.yahoo_driver.quit()
 
-    def handle_sell(self, user_id, password, birth):
-        sell_manage_by_user = SellDataByUser.I("..\\出品管理", user_id)
+    def sell(self, user_id, password, birth):
+        sell_of_user = SellOfUser.I("..\\出品管理", user_id)
         self.ya_browser.login(user_id, password)
 
-        for asin, item in sell_manage_by_user.df.iterrows():
-            sell_row = self.sell_by_user(asin, sell_manage_by_user)
-            sell_manage_by_user.save(sell_row)
+        for asin, item in sell_of_user.df.iterrows():
+            sell_row = self.sell_by_user(asin, sell_of_user)
+            sell_of_user.update_row(sell_row)
 
-    def sell_by_user(self, asin, sell_manage_by_user: SellDataByUser):
+    def sell_by_user(self, asin, sell_manage_by_user: SellOfUser):
         # Amazonデータ取得
         bind_func = functools.partial(self.amazon_browser.get_product_data, asin)
         product = func_with_retry(bind_func)
 
         # YahooAuction出品
-        # self.event.wait()
         bind_func = functools.partial(self.ya_browser.new_sell, product)
+        import pdb
 
+        pdb.set_trace()
         sell_row = func_with_retry(bind_func)
 
         return sell_row
 
-    def update_sell_by_user(self, asin, sell_manage_by_user: SellDataByUser):
+    def update_sell_by_user(self, asin, sell_manage_by_user: SellOfUser):
         pass
 
-    def delete_sell_by_user(self, asin, sell_manage_by_user: SellDataByUser):
+    def delete_sell_by_user(self, asin, sell_manage_by_user: SellOfUser):
         pass
 
 
