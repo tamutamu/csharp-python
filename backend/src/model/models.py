@@ -1,5 +1,7 @@
+import functools
 import os
 from datetime import datetime
+import re
 
 import pandas as pd
 
@@ -58,7 +60,7 @@ class SellOfUser:
     _instance_map = dict()
 
     @classmethod
-    def I(cls, path, user_id):
+    def get_instance(cls, path, user_id):
         key = f"{path}-{user_id}"
 
         if key not in cls._instance_map:
@@ -85,11 +87,11 @@ class SellOfUser:
         self.df = df
 
     def update_row(self, sell_row: SellRow):
-        update_data = self.gen_serise_from_amazon_product(sell_row.product)
+        update_data = self.gen_sell_row_serise(sell_row)
         self.df.loc[sell_row.product.asin] = update_data
         self.df.to_csv(os.path.join(self.path, f"{self.user_id}.csv"), encoding="utf-8-sig", index=[0])
 
-    def get(self, asin) -> SellRow:
+    def get_sell_row(self, asin) -> SellRow:
         row = self.df.loc[asin]
 
         for col in row.columns:
@@ -97,33 +99,55 @@ class SellOfUser:
 
         return SellRow()
 
-    def gen_serise_from_amazon_product(self, sell_row: SellRow):
-        img_util = lambda i, n: i[n] if len(i) >= n + 1 else ""
-        product = sell_row.product
+    def rgetattr(self, obj, attr, *args):
+        def _getattr(obj, attr):
+            array_result = re.match(r"(.*)\[(\d+)\]", attr)
+            if array_result:
+                _attr = array_result.groups()[0]
+                _index = int(array_result.groups()[1])
+                _img_list = getattr(obj, _attr, *args)
+                if len(_img_list) > _index + 1:
+                    return getattr(obj, _attr, *args)[_index]
+                else:
+                    return ""
+            else:
+                return getattr(obj, attr, *args)
 
-        default_mapper = lambda index, row, field, model: model.setattr(field, row[index])
+        return functools.reduce(_getattr, [obj] + attr.split("."))
 
-        dict_data = {
-            "ASIN": {"field": "asin", "mapper": default_mapper},
-            "ツールアクション": {"field": "ツールアクション", "mapper": default_mapper},
-            "ステータス": {"status": default_mapper},
-            "出品URL": {"sell_url": default_mapper},
-            "エラー詳細": {"error_detail": default_mapper},
-            "Amazon Title": {"title": default_mapper},
-            "Amazon Description": {"desc": default_mapper},
-            "Amazon Price": {"price": default_mapper},
-            "Amazon Profit": {"profit_price": default_mapper},
-            "Amazon Stock": {"stock": default_mapper},
-            "Amazon Image0": img_util(product.img_list, 0),
-            "Amazon Image1": img_util(product.img_list, 1),
-            "Amazon Image2": img_util(product.img_list, 2),
-            "Amazon Image3": img_util(product.img_list, 3),
-            "Amazon Image4": img_util(product.img_list, 4),
-            "Amazon Image5": img_util(product.img_list, 5),
-            "Amazon Image6": img_util(product.img_list, 6),
-            "Amazon Image7": img_util(product.img_list, 7),
-            "Amazon Image8": img_util(product.img_list, 8),
-            "Amazon Image9": img_util(product.img_list, 9),
+    def sell_row_to_dict(self, sell_row):
+        mapping = {
+            "ASIN": "asin",
+            "ツールアクション": "action",
+            "ステータス": "status",
+            "出品URL": "sell_url",
+            "エラー詳細": "error_detail",
+            "Amazon Title": "product.title",
+            "Amazon Description": "product.desc",
+            "Amazon Price": "product.price",
+            "Amazon Profit": "product.profit_price",
+            "Amazon Stock": "product.stock",
+            "Amazon Image0": "product.img_list[0]",
+            "Amazon Image1": "product.img_list[1]",
+            "Amazon Image2": "product.img_list[2]",
+            "Amazon Image3": "product.img_list[3]",
+            "Amazon Image4": "product.img_list[4]",
+            "Amazon Image5": "product.img_list[5]",
+            "Amazon Image6": "product.img_list[6]",
+            "Amazon Image7": "product.img_list[7]",
+            "Amazon Image8": "product.img_list[8]",
+            "Amazon Image9": "product.img_list[9]",
         }
 
+        sell_row_dict = dict()
+        for key, prop_name in mapping.items():
+            sell_row_dict[key] = self.rgetattr(sell_row, prop_name)
+
+        return sell_row_dict
+
+    def gen_sell_row_serise(self, sell_row: SellRow):
+        import ipdb
+
+        ipdb.set_trace()
+        dict_data = self.sell_row_to_dict(sell_row)
         return pd.Series(dict_data)

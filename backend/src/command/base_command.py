@@ -73,5 +73,5 @@ class BaseCmd(metaclass=ABCMeta):
         raise NotImplementedError()
 
     def after(self):
-        CommandSessionManager.I().remove(self.process_id)
+        CommandSessionManager.get_instance().remove(self.process_id)
         LOGGER.info(f"--- END[{self.cmd_json['_CommandName']}] ---")

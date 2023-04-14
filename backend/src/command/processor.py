@@ -18,7 +18,7 @@ class CommandProcessor:
             ret = cmd.execute()
 
             # waitをEventで解除する時など、どのコマンドセッションに実行するかをプロセスIDで管理
-            CommandSessionManager.I().add(cmd.process_id, cmd)
+            CommandSessionManager.get_instance().add(cmd.process_id, cmd)
 
             return json.dumps(ret, ensure_ascii=False, indent=2)
         except Exception as e:

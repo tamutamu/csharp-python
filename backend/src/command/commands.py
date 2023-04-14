@@ -18,7 +18,7 @@ LOGGER = getLogger(__name__)
 
 class EventCmd(BaseCmd):
     def main(self):
-        cmd = CommandSessionManager.I().get(self.cmd_json["process_id"])
+        cmd = CommandSessionManager.get_instance().get(self.cmd_json["process_id"])
         cmd.event.set()
         return Const.Result.SUCCESS
 
@@ -67,7 +67,7 @@ class YahooAuctionSellCmd(BaseCmd):
                 self.yahoo_driver.quit()
 
     def sell(self, user_id, password, birth):
-        sell_of_user = SellOfUser.I("..\\出品管理", user_id)
+        sell_of_user = SellOfUser.get_instance("..\\出品管理", user_id)
         self.ya_browser.login(user_id, password)
 
         for asin, item in sell_of_user.df.iterrows():
@@ -81,9 +81,6 @@ class YahooAuctionSellCmd(BaseCmd):
 
         # YahooAuction出品
         bind_func = functools.partial(self.ya_browser.new_sell, product)
-        import pdb
-
-        pdb.set_trace()
         sell_row = func_with_retry(bind_func)
 
         return sell_row
