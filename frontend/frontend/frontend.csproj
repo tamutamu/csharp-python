@@ -272,6 +272,18 @@
     <Compile Include="command\BackendCmds.cs" />
     <Compile Include="Const.cs" />
     <Compile Include="db\DBManager.cs" />
+    <Compile Include="GetAsinForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="GetAsinForm.Designer.cs">
+      <DependentUpon>GetAsinForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GetSellerForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="GetSellerForm.Designer.cs">
+      <DependentUpon>GetSellerForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="help\VersionInfo.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -305,6 +317,12 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="socket\SocketClient.cs" />
     <None Include="Resources\62917openfilefolder_109270.ico" />
+    <EmbeddedResource Include="GetAsinForm.resx">
+      <DependentUpon>GetAsinForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GetSellerForm.resx">
+      <DependentUpon>GetSellerForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="prelogin\PreLoginForm.resx">
       <DependentUpon>PreLoginForm.cs</DependentUpon>
     </EmbeddedResource>

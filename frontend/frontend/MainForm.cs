@@ -15,6 +15,9 @@ namespace frontend
 {
     public partial class MainForm : Form
     {
+        private Form getSellerForm;
+        private Form getAsinForm;
+
         static NLog.Logger LOGGER = NLog.LogManager.GetCurrentClassLogger();
         public BackendServer backendServer = null;
         public int frontendServerPort = 0;
@@ -30,14 +33,24 @@ namespace frontend
         private void Form1_Load(object sender, EventArgs e)
         {
             // Python側バックエンドサーバ起動
-            backendServer = new BackendServer();
-            backendServer.OupputDataReceivedEventHandler = BackendServerOutputDataReceived;
-            backendServer.ErrorDataReceivedEventHandler = BackendServerErrorDataReceived;
-            backendServer.ExitEventHandler = BackendServerExited;
-            backendServer.Start();
+            //backendServer = new BackendServer();
+            //backendServer.OupputDataReceivedEventHandler = BackendServerOutputDataReceived;
+            //backendServer.ErrorDataReceivedEventHandler = BackendServerErrorDataReceived;
+            //backendServer.ExitEventHandler = BackendServerExited;
+            //backendServer.Start();
 
             // DataGridView初期化
-            SetupDataGridView();
+            //SetupDataGridView();
+
+            getSellerForm = new GetSellerForm();
+            getSellerForm.TopLevel = false;
+            getSellerForm.Dock = DockStyle.Fill;
+            panel2.Controls.Add(getSellerForm);
+
+            getAsinForm = new GetAsinForm();
+            getAsinForm.TopLevel = false;
+            getAsinForm.Dock = DockStyle.Fill;
+            panel2.Controls.Add(getAsinForm);
         }
 
         private void SetupDataGridView()
@@ -188,6 +201,24 @@ namespace frontend
         {
             var f = new VersionInfo();
             f.ShowDialog(this);
+        }
+
+        private void btnShowGetSellerForm_Click(object sender, EventArgs e)
+        {
+            HideAllForm();
+            getSellerForm.Show();
+        }
+
+        private void btnShowGetAsinForm_Click(object sender, EventArgs e)
+        {
+            HideAllForm();
+            getAsinForm.Show();
+        }
+
+        private void HideAllForm()
+        {
+            getSellerForm.Hide();
+            getAsinForm.Hide();
         }
     }
 }

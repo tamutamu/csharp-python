@@ -43,16 +43,24 @@
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.btnExit = new System.Windows.Forms.Button();
             this.dgvStockPrice = new System.Windows.Forms.DataGridView();
-            this.btnPreLogin = new System.Windows.Forms.Button();
+            this.fileSystemWatcher1 = new System.IO.FileSystemWatcher();
+            this.panel1 = new System.Windows.Forms.Panel();
+            this.panel2 = new System.Windows.Forms.Panel();
+            this.btnShowGetSellerForm = new System.Windows.Forms.Button();
+            this.btnShowGetAsinForm = new System.Windows.Forms.Button();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvStockPrice)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.fileSystemWatcher1)).BeginInit();
+            this.panel1.SuspendLayout();
+            this.panel2.SuspendLayout();
             this.SuspendLayout();
             // 
             // btnTest1
             // 
-            this.btnTest1.Location = new System.Drawing.Point(617, 83);
+            this.btnTest1.Location = new System.Drawing.Point(852, 608);
+            this.btnTest1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.btnTest1.Name = "btnTest1";
-            this.btnTest1.Size = new System.Drawing.Size(93, 38);
+            this.btnTest1.Size = new System.Drawing.Size(108, 44);
             this.btnTest1.TabIndex = 0;
             this.btnTest1.Text = "テスト";
             this.btnTest1.UseVisualStyleBackColor = true;
@@ -61,9 +69,10 @@
             // textBox1
             // 
             this.textBox1.Font = new System.Drawing.Font("MS UI Gothic", 15.85714F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.textBox1.Location = new System.Drawing.Point(21, 81);
+            this.textBox1.Location = new System.Drawing.Point(113, 795);
+            this.textBox1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(565, 39);
+            this.textBox1.Size = new System.Drawing.Size(658, 44);
             this.textBox1.TabIndex = 1;
             // 
             // rtbMessage
@@ -73,10 +82,11 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.rtbMessage.BackColor = System.Drawing.SystemColors.ControlLight;
             this.rtbMessage.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.rtbMessage.Location = new System.Drawing.Point(12, 147);
+            this.rtbMessage.Location = new System.Drawing.Point(991, 643);
+            this.rtbMessage.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.rtbMessage.Name = "rtbMessage";
             this.rtbMessage.ReadOnly = true;
-            this.rtbMessage.Size = new System.Drawing.Size(952, 615);
+            this.rtbMessage.Size = new System.Drawing.Size(274, 196);
             this.rtbMessage.TabIndex = 3;
             this.rtbMessage.Text = "";
             // 
@@ -90,7 +100,8 @@
             this.HelpToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(990, 33);
+            this.menuStrip1.Padding = new System.Windows.Forms.Padding(7, 2, 0, 2);
+            this.menuStrip1.Size = new System.Drawing.Size(1587, 38);
             this.menuStrip1.TabIndex = 4;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -99,13 +110,13 @@
             this.toolStripMenuItem1.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.ExitToolStripMenuItem});
             this.toolStripMenuItem1.Name = "toolStripMenuItem1";
-            this.toolStripMenuItem1.Size = new System.Drawing.Size(98, 29);
+            this.toolStripMenuItem1.Size = new System.Drawing.Size(112, 34);
             this.toolStripMenuItem1.Text = "ファイル(F)";
             // 
             // ExitToolStripMenuItem
             // 
             this.ExitToolStripMenuItem.Name = "ExitToolStripMenuItem";
-            this.ExitToolStripMenuItem.Size = new System.Drawing.Size(169, 34);
+            this.ExitToolStripMenuItem.Size = new System.Drawing.Size(315, 40);
             this.ExitToolStripMenuItem.Text = "終了(&E)";
             this.ExitToolStripMenuItem.Click += new System.EventHandler(this.ExitToolStripMenuItem_Click);
             // 
@@ -115,20 +126,20 @@
             this.PreLoginToolStripMenuItem,
             this.SettingsToolStripMenuItem});
             this.設定SToolStripMenuItem.Name = "設定SToolStripMenuItem";
-            this.設定SToolStripMenuItem.Size = new System.Drawing.Size(84, 29);
+            this.設定SToolStripMenuItem.Size = new System.Drawing.Size(96, 34);
             this.設定SToolStripMenuItem.Text = "設定(&S)";
             // 
             // PreLoginToolStripMenuItem
             // 
             this.PreLoginToolStripMenuItem.Name = "PreLoginToolStripMenuItem";
-            this.PreLoginToolStripMenuItem.Size = new System.Drawing.Size(222, 34);
+            this.PreLoginToolStripMenuItem.Size = new System.Drawing.Size(315, 40);
             this.PreLoginToolStripMenuItem.Text = "事前ログイン(&L)";
             this.PreLoginToolStripMenuItem.Click += new System.EventHandler(this.PreLoginToolStripMenuItem_Click);
             // 
             // SettingsToolStripMenuItem
             // 
             this.SettingsToolStripMenuItem.Name = "SettingsToolStripMenuItem";
-            this.SettingsToolStripMenuItem.Size = new System.Drawing.Size(222, 34);
+            this.SettingsToolStripMenuItem.Size = new System.Drawing.Size(315, 40);
             this.SettingsToolStripMenuItem.Text = "設定ファイル(&C)";
             this.SettingsToolStripMenuItem.Click += new System.EventHandler(this.SettingsToolStripMenuItem_Click);
             // 
@@ -137,13 +148,13 @@
             this.HelpToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.VersionToolStripMenuItem});
             this.HelpToolStripMenuItem.Name = "HelpToolStripMenuItem";
-            this.HelpToolStripMenuItem.Size = new System.Drawing.Size(95, 29);
+            this.HelpToolStripMenuItem.Size = new System.Drawing.Size(108, 34);
             this.HelpToolStripMenuItem.Text = "ヘルプ(&H)";
             // 
             // VersionToolStripMenuItem
             // 
             this.VersionToolStripMenuItem.Name = "VersionToolStripMenuItem";
-            this.VersionToolStripMenuItem.Size = new System.Drawing.Size(270, 34);
+            this.VersionToolStripMenuItem.Size = new System.Drawing.Size(315, 40);
             this.VersionToolStripMenuItem.Text = "バージョン情報(H)";
             this.VersionToolStripMenuItem.Click += new System.EventHandler(this.VersionToolStripMenuItem_Click);
             // 
@@ -156,9 +167,10 @@
             // 
             // btnExit
             // 
-            this.btnExit.Location = new System.Drawing.Point(873, 81);
+            this.btnExit.Location = new System.Drawing.Point(1072, 538);
+            this.btnExit.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.btnExit.Name = "btnExit";
-            this.btnExit.Size = new System.Drawing.Size(91, 39);
+            this.btnExit.Size = new System.Drawing.Size(106, 46);
             this.btnExit.TabIndex = 6;
             this.btnExit.Text = "停  止";
             this.btnExit.UseVisualStyleBackColor = true;
@@ -171,43 +183,85 @@
             this.dgvStockPrice.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left)));
             this.dgvStockPrice.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dgvStockPrice.Location = new System.Drawing.Point(506, 36);
+            this.dgvStockPrice.Location = new System.Drawing.Point(255, 619);
+            this.dgvStockPrice.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.dgvStockPrice.Name = "dgvStockPrice";
             this.dgvStockPrice.RowHeadersWidth = 72;
             this.dgvStockPrice.RowTemplate.Height = 30;
-            this.dgvStockPrice.Size = new System.Drawing.Size(458, 26);
+            this.dgvStockPrice.Size = new System.Drawing.Size(534, 79);
             this.dgvStockPrice.TabIndex = 7;
             this.dgvStockPrice.Visible = false;
             // 
-            // btnPreLogin
+            // fileSystemWatcher1
             // 
-            this.btnPreLogin.Location = new System.Drawing.Point(734, 83);
-            this.btnPreLogin.Name = "btnPreLogin";
-            this.btnPreLogin.Size = new System.Drawing.Size(111, 38);
-            this.btnPreLogin.TabIndex = 8;
-            this.btnPreLogin.Text = "事前ログイン";
-            this.btnPreLogin.UseVisualStyleBackColor = true;
-            this.btnPreLogin.Click += new System.EventHandler(this.btnPreLogin_Click);
+            this.fileSystemWatcher1.EnableRaisingEvents = true;
+            this.fileSystemWatcher1.SynchronizingObject = this;
+            // 
+            // panel1
+            // 
+            this.panel1.Controls.Add(this.btnShowGetAsinForm);
+            this.panel1.Controls.Add(this.btnShowGetSellerForm);
+            this.panel1.Dock = System.Windows.Forms.DockStyle.Left;
+            this.panel1.Location = new System.Drawing.Point(0, 38);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(240, 894);
+            this.panel1.TabIndex = 8;
+            // 
+            // panel2
+            // 
+            this.panel2.Controls.Add(this.rtbMessage);
+            this.panel2.Controls.Add(this.textBox1);
+            this.panel2.Controls.Add(this.btnTest1);
+            this.panel2.Controls.Add(this.dgvStockPrice);
+            this.panel2.Controls.Add(this.btnExit);
+            this.panel2.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panel2.Location = new System.Drawing.Point(240, 38);
+            this.panel2.Name = "panel2";
+            this.panel2.Size = new System.Drawing.Size(1347, 894);
+            this.panel2.TabIndex = 8;
+            // 
+            // btnShowGetSellerForm
+            // 
+            this.btnShowGetSellerForm.Location = new System.Drawing.Point(3, 32);
+            this.btnShowGetSellerForm.Name = "btnShowGetSellerForm";
+            this.btnShowGetSellerForm.Size = new System.Drawing.Size(237, 76);
+            this.btnShowGetSellerForm.TabIndex = 0;
+            this.btnShowGetSellerForm.Text = "ライバルセラー取得";
+            this.btnShowGetSellerForm.TextImageRelation = System.Windows.Forms.TextImageRelation.TextBeforeImage;
+            this.btnShowGetSellerForm.UseVisualStyleBackColor = true;
+            this.btnShowGetSellerForm.Click += new System.EventHandler(this.btnShowGetSellerForm_Click);
+            // 
+            // btnShowGetAsinForm
+            // 
+            this.btnShowGetAsinForm.Location = new System.Drawing.Point(3, 138);
+            this.btnShowGetAsinForm.Name = "btnShowGetAsinForm";
+            this.btnShowGetAsinForm.Size = new System.Drawing.Size(237, 76);
+            this.btnShowGetAsinForm.TabIndex = 0;
+            this.btnShowGetAsinForm.Text = "米Asin取得";
+            this.btnShowGetAsinForm.TextImageRelation = System.Windows.Forms.TextImageRelation.TextBeforeImage;
+            this.btnShowGetAsinForm.UseVisualStyleBackColor = true;
+            this.btnShowGetAsinForm.Click += new System.EventHandler(this.btnShowGetAsinForm_Click);
             // 
             // MainForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(144F, 144F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(168F, 168F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.ClientSize = new System.Drawing.Size(990, 799);
-            this.Controls.Add(this.btnPreLogin);
-            this.Controls.Add(this.dgvStockPrice);
-            this.Controls.Add(this.btnExit);
-            this.Controls.Add(this.rtbMessage);
-            this.Controls.Add(this.textBox1);
-            this.Controls.Add(this.btnTest1);
+            this.ClientSize = new System.Drawing.Size(1587, 932);
+            this.Controls.Add(this.panel2);
+            this.Controls.Add(this.panel1);
             this.Controls.Add(this.menuStrip1);
             this.MainMenuStrip = this.menuStrip1;
+            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.Name = "MainForm";
-            this.Text = "Form1";
+            this.Text = "メインフォーム";
             this.Load += new System.EventHandler(this.Form1_Load);
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvStockPrice)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.fileSystemWatcher1)).EndInit();
+            this.panel1.ResumeLayout(false);
+            this.panel2.ResumeLayout(false);
+            this.panel2.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -223,13 +277,17 @@
         private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
         private System.Windows.Forms.Button btnExit;
         private System.Windows.Forms.DataGridView dgvStockPrice;
-        private System.Windows.Forms.Button btnPreLogin;
         private System.Windows.Forms.ToolStripMenuItem 設定SToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem SettingsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem ExitToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem PreLoginToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem HelpToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem VersionToolStripMenuItem;
+        private System.IO.FileSystemWatcher fileSystemWatcher1;
+        private System.Windows.Forms.Panel panel2;
+        private System.Windows.Forms.Panel panel1;
+        private System.Windows.Forms.Button btnShowGetAsinForm;
+        private System.Windows.Forms.Button btnShowGetSellerForm;
     }
 }
 
